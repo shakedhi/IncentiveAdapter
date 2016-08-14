@@ -42,8 +42,8 @@ public class IncentiveAdapter{
         System.out.println("Server is running, waiting for requests via 'is.smartsociety@gmail.com'.");
 
         //wait for close
-        System.out.println("Press enter to exit");
-        reader.read();
+        System.out.println("Press enter to exit...");
+        reader.readLine();
 
         //tear down
         smartCom.tearDownSmartCom();
@@ -71,26 +71,20 @@ public class IncentiveAdapter{
 
             @Override
             public void onError(String message, String code, Exception e) {
-                System.out.println("There was a problem connecting!");
+                System.out.println("There is a connection problem!");
             }
         }, ConnectionState.ALL);
 
         Channel channel = pusherclient.subscribe("adapter");
 
-        channel.bind("intervention", new SubscriptionEventListener() {
-            @Override
-            public void onEvent(String channel, String event, String data) {
-                System.out.println("Received intervention with data: " + data);
-                sendIntervention(data);
-            }
+        channel.bind("intervention", (chan, event, data) -> {
+            System.out.println("Received intervention with data: " + data);
+            sendIntervention(data);
         });
 
-        channel.bind("expert", new SubscriptionEventListener() {
-            @Override
-            public void onEvent(String channel, String event, String data) {
-                System.out.println("Received expert with data: " + data);
-                excludeExpert("6802", data); //TODO: fix hard coded collective id
-            }
+        channel.bind("expert", (chan, event, data) -> {
+            System.out.println("Received expert with data: " + data);
+            excludeExpert("6802", data); //TODO: fix hard coded collective id
         });
 
         //connect to PeerManager
@@ -134,19 +128,19 @@ public class IncentiveAdapter{
             shouldBeReminded = collectiveInfo.getPeers();
             shouldBeReminded.removeAll(excludedExperts.get(collectiveId));
             excludedExperts.remove(collectiveId);
-            //TODO: remove shouldBeReminded = new LinkedList<>();
-            //TODO: remove shouldBeReminded.add(Identifier.peer("shakedhi"));
+//            shouldBeReminded = new LinkedList<>();
+//            shouldBeReminded.add(Identifier.peer("shakedhi"));
         } catch (NoSuchCollectiveException e) {
             System.out.println("sendIntervention: NoSuchCollectiveException (id: " + collectiveId.getId() + ").");
             return;
         }
 
         // build message template
-        String conversation = jsonObject.getString("intervention_type"); //TODO: correct conversation
-        String intervention = jsonObject.getString("text_message"); //TODO: correct intervention
+        String conversation = jsonObject.getString("intervention_type");
+        String intervention = jsonObject.getString("intervention_text");
         Message.MessageBuilder builder =
                 new Message.MessageBuilder()
-                        .setType("APP_ID") //TODO: add app id as a type
+                        .setType("APP_ID") //TODO: fix type field
                         .setSubtype("reminder")
                         .setSenderId(Identifier.component("IS"))
                         .setConversationId(conversation)
@@ -198,7 +192,7 @@ public class IncentiveAdapter{
             Classification classification = parseReminderRequest(message);
 
             //send message to incentive server
-            System.out.println("SENT TO IS: '" + classification.toString() + "'.");
+            System.out.println("Sent to IS: '" + classification.toString() + "'.");
             pusher.trigger("ouroboros", "classification", classification);
         }
 
@@ -213,17 +207,17 @@ public class IncentiveAdapter{
             String untaggedContent = msg.getContent().replaceAll("<.*?>","");
             untaggedContent = StringEscapeUtils.unescapeHtml4(untaggedContent).trim();
             untaggedContent = untaggedContent.replaceAll("\\r\\n|\\r|\\n|\\s|\\u00A0|\\u2007|\\u202F","");
-            System.out.println("REMINDER: '" + untaggedContent + "'.");
+            System.out.println("Reminder received: '" + untaggedContent + "'.");
 
-            JSONObject content = new JSONObject(untaggedContent); //TODO: fix incentive_text parsing
+            JSONObject content = new JSONObject(untaggedContent);
 
             String collective = content.getJSONObject("recipient").getString("id");
-            String city = "Hadera"; //TODO: fix geo when needed
-            String country = "Israel";
+            String city = content.getJSONObject("location").getString("city_name");
+            String country = content.getJSONObject("location").getString("country_name");
             String incentive_text = content.getString("incentive_text");
             String created = sdf.format(new Date(content.getLong("incentive_timestamp")));
 
-            excludedExperts.put(Identifier.collective(collective), new LinkedList<Identifier>());
+            excludedExperts.put(Identifier.collective(collective), new LinkedList<>());
 
             return new Classification(collective, city, country, incentive_text, created);
         }
@@ -269,27 +263,4 @@ public class IncentiveAdapter{
             }
         }
     }
-
-    /*
-        Temporary demo peer
-
-    private static Identifier createDemoPeer(DemoPeerManager peerManager){
-        Identifier peerId = Identifier.peer("peer1");
-        String email = "shakedhi@post.bgu.ac.il";
-
-        PeerChannelAddress address = new PeerChannelAddress();
-        address.setPeerId(peerId);
-        address.setChannelType(Identifier.channelType("Email"));
-        address.setContactParameters(Arrays.asList(email));
-
-        PeerInfo info = new PeerInfo();
-        info.setId(peerId);
-        info.setDeliveryPolicy(DeliveryPolicy.Peer.AT_LEAST_ONE);
-        info.setPrivacyPolicies(null);
-        info.setAddresses(Arrays.asList(address));
-        System.out.println(info.toString());
-        //peerManager.addPeer(peerId, info, peerId.getId());
-
-        return peerId;
-    }*/
 }
