@@ -10,14 +10,17 @@ import at.ac.tuwien.dsg.smartcom.model.*;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.message.BasicHeader;
+import org.apache.http.protocol.HTTP;
+import org.apache.log4j.Logger;
+import org.apache.log4j.LogManager;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,15 +28,14 @@ import java.util.List;
  * @author Shaked Hindi
  */
 public class PeerManager implements PeerAuthenticationCallback, PeerInfoCallback, CollectiveInfoCallback {
+    private static final Logger logger = LogManager.getLogger(PeerManager.class);
+    private static final HttpClient httpClient = HttpClientBuilder.create().build();
     private static PeerManager peerManager;
-    private HttpClient httpClient;
     private final String PM_URL = "http://elog.disi.unitn.it:8081/kos-smartsociety/smartsociety-peermanager";
     private final String GET_COLLECTIVE = "/collectives/";
     private final String GET_PEER = "/askProfile/";
 
-    private PeerManager() {
-        httpClient = HttpClientBuilder.create().build();
-    }
+    private PeerManager() {}
 
     public static PeerManager instance() {
         if (peerManager == null)
@@ -50,7 +52,7 @@ public class PeerManager implements PeerAuthenticationCallback, PeerInfoCallback
             // check status code
             int status = response.getStatusLine().getStatusCode();
             if (status != 200)
-                System.out.println("PeerManager.request: status code "+ status);
+                logger.error("PeerManager.request: status code "+ status);
 
             // read content
             InputStream content = response.getEntity().getContent();
@@ -60,10 +62,10 @@ public class PeerManager implements PeerAuthenticationCallback, PeerInfoCallback
             while ((line = rd.readLine()) != null)
                 result.append(line);
 
-            System.out.println(result.toString());
+            logger.info(result.toString());
             return result.toString();
         } catch (IOException e){
-            System.out.println("PeerManager.request: IOException " + e.getMessage());
+            logger.error("IOException " + e.getMessage());
             return "{}";
         }
     }
@@ -144,6 +146,69 @@ public class PeerManager implements PeerAuthenticationCallback, PeerInfoCallback
 
         return params;
     }
+
+    /*
+    public void post_tests() {
+        String reminder = "    {\n" +
+                "  \"incentive_type\": \"reminder\",\n" +
+                "  \"incentive_text\": \n" +
+                "     \"{\\\"task_id\\\": \\\"969cef30-c352-11e5-8e1c-0242ac120002\\\"}\",\n" +
+                "  \"incentive_timestamp\": \"1456392624000\",\n" +
+                "  \"location\": {\n" +
+                "  \t\"city_name\": \"Hadera\",\n" +
+                "  \t\"country_name\": \"Israel\"\n" +
+                "  },\n" +
+                "  \"recipient\": {\n" +
+                "    \"type\": \"collective\",\n" +
+                "    \"id\": \"6802\"\n" +
+                "  }\n" +
+                "}";
+        String invalidate = "[\n" +
+                "  {\n" +
+                "    \"type\": \"peer\",\n" +
+                "    \"id\": \"JhonnyD\"\n" +
+                "  },\n" +
+                "  {\n" +
+                "    \"type\": \"peer\",\n" +
+                "    \"id\": \"Niceguy2\"\n" +
+                "  }\n" +
+                "]";
+        try {
+            Thread.sleep(10000);
+            HttpPost request = new HttpPost("http://localhost:8083/reminder");
+            request.addHeader(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+            request.setEntity(new StringEntity(reminder));
+            HttpResponse response = httpClient.execute(request);
+            System.out.println("REMINDER SUCC (status: " + response.getStatusLine().getStatusCode() + ").");
+            Thread.sleep(10000);
+            request = new HttpPost("http://localhost:8083/reminder");
+            request.addHeader(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+            request.setEntity(new StringEntity(reminder));
+            response = httpClient.execute(request);
+            System.out.println("2 REMINDER SUCC (status: " + response.getStatusLine().getStatusCode() + ").");
+            Thread.sleep(10000);
+            request = new HttpPost("http://localhost:8083/invalidate/0");
+            request.addHeader(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+            request.setEntity(new StringEntity(invalidate));
+            response = httpClient.execute(request);
+            System.out.println("INVALIDATE SUCC (status: " + response.getStatusLine().getStatusCode() + ").");
+            Thread.sleep(10000);
+            request = new HttpPost("http://localhost:8083/invalidate/6802");
+            request.addHeader(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+            request.setEntity(new StringEntity(invalidate));
+            logger.info("after");
+            response = httpClient.execute(request);
+            System.out.println("INVALIDATE ERR NUM(status: " + response.getStatusLine().getStatusCode() + ").");
+            Thread.sleep(10000);
+            request = new HttpPost("http://localhost:8083/invalidate/blabla");
+            request.addHeader(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+            request.setEntity(new StringEntity(invalidate));
+            response = httpClient.execute(request);
+            System.out.println("INVALIDATE ERR STR(status: " + response.getStatusLine().getStatusCode() + ").");
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+    }*/
 
     /*
     public void addPeer(){

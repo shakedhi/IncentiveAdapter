@@ -3,12 +3,9 @@ package adapter;
 import at.ac.tuwien.dsg.smartcom.Communication;
 import at.ac.tuwien.dsg.smartcom.SmartCom;
 import at.ac.tuwien.dsg.smartcom.SmartComBuilder;
-import at.ac.tuwien.dsg.smartcom.adapters.EmailInputAdapter;
-import at.ac.tuwien.dsg.smartcom.callback.NotificationCallback;
 import at.ac.tuwien.dsg.smartcom.callback.exception.NoSuchCollectiveException;
 import at.ac.tuwien.dsg.smartcom.exception.CommunicationException;
 import at.ac.tuwien.dsg.smartcom.model.*;
-import at.ac.tuwien.dsg.smartcom.utils.PropertiesLoader;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,10 +14,14 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.pusher.client.channel.*;
 import com.pusher.client.connection.*;
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.*;
+import org.apache.log4j.Logger;
+import org.apache.log4j.LogManager;
+import spark.Request;
+import spark.Response;
+
+import static spark.Spark.*;
 
 /**
  * @author Shaked Hindi
@@ -31,7 +32,8 @@ public class IncentiveAdapter{
     private static com.pusher.rest.Pusher pusher;
     private static com.pusher.client.Pusher pusherclient;
     private static PeerManager peerManager;
-    private static ConcurrentHashMap<Identifier,LinkedList<Identifier>> excludedExperts;
+    private static ConcurrentHashMap<Identifier,LinkedList<Identifier>> invalidatedPeers;
+    private static final Logger logger = LogManager.getLogger(IncentiveAdapter.class);
 
     public static void main(String[] args) throws CommunicationException, IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
@@ -39,15 +41,16 @@ public class IncentiveAdapter{
         //set up
         System.out.println("Initializing server...");
         init();
-        System.out.println("Server is running, waiting for requests via 'is.smartsociety@gmail.com'.");
+        System.out.println("Server is running at http://localhost:8083.");
 
         //wait for close
-        System.out.println("Press enter to exit...");
+        System.out.println("Press enter to exit.");
         reader.readLine();
 
         //tear down
         smartCom.tearDownSmartCom();
         pusherclient.disconnect();
+        stop();
         System.out.println("Shutdown complete");
     }
 
@@ -66,25 +69,48 @@ public class IncentiveAdapter{
         pusherclient.connect(new ConnectionEventListener() {
             @Override
             public void onConnectionStateChange(ConnectionStateChange change) {
-                System.out.println("Pusher client is " + change.getCurrentState());
+                ConnectionState state = change.getCurrentState();
+                if(state == ConnectionState.CONNECTED || state == ConnectionState.DISCONNECTED)
+                    logger.info("Pusher client is " + state);
             }
 
             @Override
             public void onError(String message, String code, Exception e) {
-                System.out.println("There is a connection problem!");
+                logger.error("There is a connection problem!");
             }
         }, ConnectionState.ALL);
 
-        Channel channel = pusherclient.subscribe("adapter");
-
-        channel.bind("intervention", (chan, event, data) -> {
-            System.out.println("Received intervention with data: " + data);
+        pusherclient.subscribe("adapter").bind("intervention", (chan, event, data) -> {
+            logger.info("Received intervention request (data: " + data + ")");
             sendIntervention(data);
         });
 
-        channel.bind("expert", (chan, event, data) -> {
-            System.out.println("Received expert with data: " + data);
-            excludeExpert("6802", data); //TODO: fix hard coded collective id
+        //initialize server
+        port(8083);
+        get("/*", (request, response) -> badRequest(response));
+        put("/*", (request, response) -> badRequest(response));
+        delete("/*", (request, response) -> badRequest(response));
+        options("/*", (request, response) -> badRequest(response));
+        post("/invalidate/:id", (request, response) -> {
+            try {
+                int id = Integer.parseInt(request.params(":id"));
+                logger.info(id);
+                if (id < 1)
+                    return badRequest(response);
+                logger.info("after if");
+                invalidatePeers(request);
+                return successfulRequest(response);
+            } catch (NumberFormatException e){
+                return badRequest(response);
+            }
+        });
+        post("/*", (request, response) -> {
+            logger.info("post");
+            if (request.splat().length == 1 && request.splat()[0].equals("reminder")){
+                handleReminderRequest(request);
+                return successfulRequest(response);
+            }
+            return badRequest(response);
         });
 
         //connect to PeerManager
@@ -96,20 +122,73 @@ public class IncentiveAdapter{
         //get communication API
         communication = smartCom.getCommunication();
 
-        //register the input handler (pulls every second)
-        communication.addPullAdapter(
-                new EmailInputAdapter("REMINDER",
-                        PropertiesLoader.getProperty("EmailAdapter.properties", "hostIncoming"),
-                        PropertiesLoader.getProperty("EmailAdapter.properties", "username"),
-                        PropertiesLoader.getProperty("EmailAdapter.properties", "password"),
-                        Integer.valueOf(PropertiesLoader.getProperty("EmailAdapter.properties", "portIncoming")),
-                        true, "test", "test", true),
-                1000);
+        //init invalidated peers map
+        invalidatedPeers = new ConcurrentHashMap<>();
+    }
 
-        //register notification callback
-        communication.registerNotificationCallback(new ReminderHandler());
+    private static String badRequest(Response response){
+        response.status(400);
+        return "<h1>The server supports only POST request with a '/reminder' postfix or a '/invalidate/{collective_id}' postfix.</h1>";
+    }
 
-        excludedExperts = new ConcurrentHashMap<>();
+    private static String successfulRequest(Response response){
+        response.status(200);
+        return "<h1>Success</h1>";
+    }
+
+    /**
+     * Gets a POST request, parses its content, creates a Classification Object
+     * and send it to the Incentive Server
+     * @param request the POST request
+     */
+    private static void handleReminderRequest(Request request){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
+
+        String content = request.body();
+        String formattedContent = content.replaceAll("\\r\\n|\\r|\\n|\\s|\\u00A0|\\u2007|\\u202F","");
+        logger.info("Reminder received: '" + formattedContent + "'.");
+
+        JSONObject jContent = new JSONObject(formattedContent);
+
+        String collective = jContent.getJSONObject("recipient").getString("id");
+        String city = jContent.getJSONObject("location").getString("city_name");
+        String country = jContent.getJSONObject("location").getString("country_name");
+        String incentive_text = jContent.getString("incentive_text");
+        String created = sdf.format(new Date(jContent.getLong("incentive_timestamp")));
+
+        //create a list for the excluded experts
+        invalidatedPeers.put(Identifier.collective(collective), new LinkedList<>());
+
+        //send message to incentive server
+        Classification classification = new Classification(collective, city, country, incentive_text, created);
+        logger.info("Sent to IS: '" + classification.toString() + "'.");
+        pusher.trigger("ouroboros", "classification", classification);
+    }
+
+    /**
+     * Gets POST request with a collective and a list of peers and
+     * adds them to the corresponding invalidated peers list
+     * @param request the POST request
+     */
+    private static void invalidatePeers(Request request) {
+        String collective = request.params(":id");
+        String experts = request.body();
+        Identifier collectiveId = Identifier.collective(collective);
+        List<Identifier> invalidated = invalidatedPeers.get(collectiveId);
+
+        if(invalidated == null) {
+            logger.error("null list (id: " + collectiveId.getId() + ").");
+            return;
+        }
+
+        //parse json array and add experts to collective invalidated list
+        JSONArray peers = new JSONArray(experts);
+        Identifier peerId;
+        for(int i = 0; i < peers.length(); i++){
+            peerId = Identifier.peer(peers.getJSONObject(i).getString("id"));
+            invalidated.add(peerId);
+            logger.info("Peer " + peerId + " was invalidated from collective " + collective);
+        }
     }
 
     /**
@@ -126,12 +205,10 @@ public class IncentiveAdapter{
         try {
             CollectiveInfo collectiveInfo = peerManager.getCollectiveInfo(collectiveId);
             shouldBeReminded = collectiveInfo.getPeers();
-            shouldBeReminded.removeAll(excludedExperts.get(collectiveId));
-            excludedExperts.remove(collectiveId);
-//            shouldBeReminded = new LinkedList<>();
-//            shouldBeReminded.add(Identifier.peer("shakedhi"));
+            shouldBeReminded.removeAll(invalidatedPeers.get(collectiveId));
+            invalidatedPeers.remove(collectiveId);
         } catch (NoSuchCollectiveException e) {
-            System.out.println("sendIntervention: NoSuchCollectiveException (id: " + collectiveId.getId() + ").");
+            logger.error("NoSuchCollectiveException (id: " + collectiveId.getId() + ").");
             return;
         }
 
@@ -154,113 +231,8 @@ public class IncentiveAdapter{
                 communication.send(m);
             }
         } catch (CommunicationException ce){
-            System.out.println("sendIntervention: CommunicationException (id: " + collectiveId.getId() + ").");
+            logger.error("CommunicationException (id: " + collectiveId.getId() + ").");
         }
-    }
-
-    /**
-     * Gets a collective and a list of peers and adds them to the corresponding exluded experts list
-     * @param collective the collective id
-     * @param experts the JSON String
-     */
-    private static void excludeExpert(String collective, String experts) {
-        Identifier collectiveId = Identifier.collective(collective);
-        List<Identifier> excluded = excludedExperts.get(collectiveId);
-
-        if(excluded == null) {
-            System.out.println("excludeExpert: null list (id: " + collectiveId.getId() + ").");
-            return;
-        }
-
-        //parse json array and add experts to collective excluded list
-        JSONArray peers = new JSONArray(experts);
-        Identifier expertPeerId;
-        for(int i = 0; i < peers.length(); i++){
-            expertPeerId = Identifier.peer(peers.getJSONObject(i).getString("id"));
-            excluded.add(expertPeerId);
-        }
-    }
-
-
-    /**
-     *  Handle an incoming reminder request
-     */
-    private static class ReminderHandler implements NotificationCallback {
-        @Override
-        public void notify(Message message) {
-            //parse request to classification
-            Classification classification = parseReminderRequest(message);
-
-            //send message to incentive server
-            System.out.println("Sent to IS: '" + classification.toString() + "'.");
-            pusher.trigger("ouroboros", "classification", classification);
-        }
-
-        /**
-         * Takes a Message Object and creates a Classification Object
-         * @param msg the Message Object
-         * @return the Classification Object
-         */
-        private Classification parseReminderRequest(Message msg){
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
-
-            String untaggedContent = msg.getContent().replaceAll("<.*?>","");
-            untaggedContent = StringEscapeUtils.unescapeHtml4(untaggedContent).trim();
-            untaggedContent = untaggedContent.replaceAll("\\r\\n|\\r|\\n|\\s|\\u00A0|\\u2007|\\u202F","");
-            System.out.println("Reminder received: '" + untaggedContent + "'.");
-
-            JSONObject content = new JSONObject(untaggedContent);
-
-            String collective = content.getJSONObject("recipient").getString("id");
-            String city = content.getJSONObject("location").getString("city_name");
-            String country = content.getJSONObject("location").getString("country_name");
-            String incentive_text = content.getString("incentive_text");
-            String created = sdf.format(new Date(content.getLong("incentive_timestamp")));
-
-            excludedExperts.put(Identifier.collective(collective), new LinkedList<>());
-
-            return new Classification(collective, city, country, incentive_text, created);
-        }
-    }
-
-    /**
-     * private class that parsed to JSON
-     */
-    private static class Classification {
-        private String project;
-        private String user_id;
-        private Geographic geo;
-        private String subjects;
-        private String created_at;
-
-        Classification(String user, String city, String country, String subj, String created){
-            this.project = "smartcom";
-            this.user_id = user;
-            this.geo = new Geographic(city, country);
-            this.subjects = subj;
-            this.created_at = created;
-        }
-
-        @Override
-        public String toString() {
-            return "{ \"project\":\"" + project + "\", \"user_id\":\"" + user_id +
-                    "\", \"geo\":\"" + geo.toString() + "\", \"subject\":\"" +
-                    subjects + "\", \"created_at\":\"" + created_at + "\" }";
-        }
-
-        private class Geographic{
-            private String city_name;
-            private String country_name;
-
-            Geographic(String city, String country){
-                this.city_name = city;
-                this.country_name = country;
-            }
-
-            @Override
-            public String toString() {
-                return "{ \"city_name:\"" + city_name + "\", \"country_name:\"" + country_name + "\" }";
-            }
-        }
+        logger.info("Reminder was sent to the peers of collective " + collectiveId.getId() + " that didn't respond.");
     }
 }
