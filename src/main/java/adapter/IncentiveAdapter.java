@@ -93,11 +93,8 @@ public class IncentiveAdapter{
         options("/*", (request, response) -> badRequest(response));
         post("/invalidate/:id", (request, response) -> {
             try {
-                int id = Integer.parseInt(request.params(":id"));
-                logger.info(id);
-                if (id < 1)
+                if (Integer.parseInt(request.params(":id")) < 1)
                     return badRequest(response);
-                logger.info("after if");
                 invalidatePeers(request);
                 return successfulRequest(response);
             } catch (NumberFormatException e){
@@ -105,7 +102,6 @@ public class IncentiveAdapter{
             }
         });
         post("/*", (request, response) -> {
-            logger.info("post");
             if (request.splat().length == 1 && request.splat()[0].equals("reminder")){
                 handleReminderRequest(request);
                 return successfulRequest(response);

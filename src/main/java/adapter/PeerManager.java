@@ -29,7 +29,6 @@ import java.util.List;
  */
 public class PeerManager implements PeerAuthenticationCallback, PeerInfoCallback, CollectiveInfoCallback {
     private static final Logger logger = LogManager.getLogger(PeerManager.class);
-    private static final HttpClient httpClient = HttpClientBuilder.create().build();
     private static PeerManager peerManager;
     private final String PM_URL = "http://elog.disi.unitn.it:8081/kos-smartsociety/smartsociety-peermanager";
     private final String GET_COLLECTIVE = "/collectives/";
@@ -44,6 +43,7 @@ public class PeerManager implements PeerAuthenticationCallback, PeerInfoCallback
     }
 
     private String getRequest(String requestType, String id){
+        HttpClient httpClient = HttpClientBuilder.create().build();
         try{
             // send get request
             HttpGet request = new HttpGet(PM_URL + requestType + id);
@@ -175,31 +175,39 @@ public class PeerManager implements PeerAuthenticationCallback, PeerInfoCallback
                 "]";
         try {
             Thread.sleep(10000);
+            HttpClient httpClient = HttpClientBuilder.create().build();
             HttpPost request = new HttpPost("http://localhost:8083/reminder");
             request.addHeader(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
             request.setEntity(new StringEntity(reminder));
             HttpResponse response = httpClient.execute(request);
             System.out.println("REMINDER SUCC (status: " + response.getStatusLine().getStatusCode() + ").");
+
             Thread.sleep(10000);
+            httpClient = HttpClientBuilder.create().build();
             request = new HttpPost("http://localhost:8083/reminder");
             request.addHeader(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
             request.setEntity(new StringEntity(reminder));
             response = httpClient.execute(request);
             System.out.println("2 REMINDER SUCC (status: " + response.getStatusLine().getStatusCode() + ").");
+
             Thread.sleep(10000);
-            request = new HttpPost("http://localhost:8083/invalidate/0");
+            httpClient = HttpClientBuilder.create().build();
+            request = new HttpPost("http://localhost:8083/invalidate/6802");
             request.addHeader(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
             request.setEntity(new StringEntity(invalidate));
             response = httpClient.execute(request);
             System.out.println("INVALIDATE SUCC (status: " + response.getStatusLine().getStatusCode() + ").");
+
             Thread.sleep(10000);
-            request = new HttpPost("http://localhost:8083/invalidate/6802");
+            httpClient = HttpClientBuilder.create().build();
+            request = new HttpPost("http://localhost:8083/invalidate/0");
             request.addHeader(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
             request.setEntity(new StringEntity(invalidate));
-            logger.info("after");
             response = httpClient.execute(request);
             System.out.println("INVALIDATE ERR NUM(status: " + response.getStatusLine().getStatusCode() + ").");
+
             Thread.sleep(10000);
+            httpClient = HttpClientBuilder.create().build();
             request = new HttpPost("http://localhost:8083/invalidate/blabla");
             request.addHeader(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
             request.setEntity(new StringEntity(invalidate));
