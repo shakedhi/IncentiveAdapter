@@ -10,11 +10,7 @@ import at.ac.tuwien.dsg.smartcom.model.*;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.message.BasicHeader;
-import org.apache.http.protocol.HTTP;
 import org.apache.log4j.Logger;
 import org.apache.log4j.LogManager;
 import org.json.JSONArray;
@@ -107,7 +103,7 @@ public class PeerManager implements PeerAuthenticationCallback, PeerInfoCallback
         response = response.replaceAll("\\r\\n|\\r|\\n|\\s|\\u00A0|\\u2007|\\u202F","");
         JSONObject content = new JSONObject(response);
 
-        //TODO: fix DeliveryPolicy.Peer policy = DeliveryPolicy.Peer.values()[content.getInt("deliveryPolicy")];
+        //TODO: replace DeliveryPolicy.Peer policy = DeliveryPolicy.Peer.values()[content.getInt("deliveryPolicy")];
         DeliveryPolicy.Peer policy = DeliveryPolicy.Peer.AT_LEAST_ONE;
         List<PeerChannelAddress> addresses = parseDeliveryAddress(id, content.getJSONArray("deliveryAddress"));
 
@@ -146,96 +142,4 @@ public class PeerManager implements PeerAuthenticationCallback, PeerInfoCallback
 
         return params;
     }
-
-    /*
-    public void post_tests() {
-        String reminder = "    {\n" +
-                "  \"incentive_type\": \"reminder\",\n" +
-                "  \"incentive_text\": \n" +
-                "     \"{\\\"task_id\\\": \\\"969cef30-c352-11e5-8e1c-0242ac120002\\\"}\",\n" +
-                "  \"incentive_timestamp\": \"1456392624000\",\n" +
-                "  \"location\": {\n" +
-                "  \t\"city_name\": \"Hadera\",\n" +
-                "  \t\"country_name\": \"Israel\"\n" +
-                "  },\n" +
-                "  \"recipient\": {\n" +
-                "    \"type\": \"collective\",\n" +
-                "    \"id\": \"6802\"\n" +
-                "  }\n" +
-                "}";
-        String invalidate = "[\n" +
-                "  {\n" +
-                "    \"type\": \"peer\",\n" +
-                "    \"id\": \"JhonnyD\"\n" +
-                "  },\n" +
-                "  {\n" +
-                "    \"type\": \"peer\",\n" +
-                "    \"id\": \"Niceguy2\"\n" +
-                "  }\n" +
-                "]";
-        try {
-            Thread.sleep(10000);
-            HttpClient httpClient = HttpClientBuilder.create().build();
-            HttpPost request = new HttpPost("http://localhost:8083/reminder");
-            request.addHeader(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
-            request.setEntity(new StringEntity(reminder));
-            HttpResponse response = httpClient.execute(request);
-            System.out.println("REMINDER SUCC (status: " + response.getStatusLine().getStatusCode() + ").");
-
-            Thread.sleep(10000);
-            httpClient = HttpClientBuilder.create().build();
-            request = new HttpPost("http://localhost:8083/reminder");
-            request.addHeader(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
-            request.setEntity(new StringEntity(reminder));
-            response = httpClient.execute(request);
-            System.out.println("2 REMINDER SUCC (status: " + response.getStatusLine().getStatusCode() + ").");
-
-            Thread.sleep(10000);
-            httpClient = HttpClientBuilder.create().build();
-            request = new HttpPost("http://localhost:8083/invalidate/6802");
-            request.addHeader(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
-            request.setEntity(new StringEntity(invalidate));
-            response = httpClient.execute(request);
-            System.out.println("INVALIDATE SUCC (status: " + response.getStatusLine().getStatusCode() + ").");
-
-            Thread.sleep(10000);
-            httpClient = HttpClientBuilder.create().build();
-            request = new HttpPost("http://localhost:8083/invalidate/0");
-            request.addHeader(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
-            request.setEntity(new StringEntity(invalidate));
-            response = httpClient.execute(request);
-            System.out.println("INVALIDATE ERR NUM(status: " + response.getStatusLine().getStatusCode() + ").");
-
-            Thread.sleep(10000);
-            httpClient = HttpClientBuilder.create().build();
-            request = new HttpPost("http://localhost:8083/invalidate/blabla");
-            request.addHeader(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
-            request.setEntity(new StringEntity(invalidate));
-            response = httpClient.execute(request);
-            System.out.println("INVALIDATE ERR STR(status: " + response.getStatusLine().getStatusCode() + ").");
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-        }
-    }*/
-
-    /*
-    public void addPeer(){
-        try {
-            HttpPost request = new HttpPost("http://elog.disi.unitn.it:8081/kos-smartsociety/smartsociety-peermanager/person_peer");
-            request.addHeader(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
-            request.setEntity(new StringEntity("{\n    \"firstname\": \"Shaked\",\n    \"lastname\": \"Hindi\",\n    \"gender\": \"male\",\n    \"username\": \"shakedhi\",\n    \"password\": \"12345678\"\n}"));
-            HttpResponse response = httpClient.execute(request);
-
-            HttpPost request2 = new HttpPost("http://elog.disi.unitn.it:8081/kos-smartsociety/smartsociety-peermanager/subscribeAsk_sl?username=shakedhi&password=12345678");
-            request2.addHeader(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
-            request2.setEntity(new StringEntity("{\n    \"available\" : true,\n    \"deliveryPolicy\" : 0,\n    \"deliveryAddresses\" : [\n        \n        {\n            \"channelType\" : \"Email\",\n            \"contactParams\" : [\"shakedhi@post.bgu.ac.il\"]\n        }\n    ]\n}"));
-            HttpResponse response2 = httpClient.execute(request2);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (ClientProtocolException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }*/
 }

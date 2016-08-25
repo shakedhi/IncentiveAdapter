@@ -55,7 +55,7 @@ public class IncentiveAdapter{
     }
 
     /**
-     *
+     * initiales the adapter components
      * @throws CommunicationException
      */
     private static void init() throws CommunicationException {
@@ -122,11 +122,21 @@ public class IncentiveAdapter{
         invalidatedPeers = new ConcurrentHashMap<>();
     }
 
+    /**
+     * Sets the response status to 400 and returns an http page
+     * @param response the Response Object
+     * @return http page content
+     */
     private static String badRequest(Response response){
         response.status(400);
         return "<h1>The server supports only POST request with a '/reminder' postfix or a '/invalidate/{collective_id}' postfix.</h1>";
     }
 
+    /**
+     * Sets the response status to 200 and returns an http page
+     * @param response the Response Object
+     * @return http page content
+     */
     private static String successfulRequest(Response response){
         response.status(200);
         return "<h1>Success</h1>";
@@ -147,8 +157,8 @@ public class IncentiveAdapter{
         JSONObject jContent = new JSONObject(formattedContent);
 
         String collective = jContent.getJSONObject("recipient").getString("id");
-        String city = jContent.getJSONObject("location").getString("city_name");
-        String country = jContent.getJSONObject("location").getString("country_name");
+        String city = tryGetLocation(jContent.getJSONObject("location"), "city_name");
+        String country = tryGetLocation(jContent.getJSONObject("location"), "country_name");
         String incentive_text = jContent.getString("incentive_text");
         String created = sdf.format(new Date(jContent.getLong("incentive_timestamp")));
 
@@ -159,6 +169,14 @@ public class IncentiveAdapter{
         Classification classification = new Classification(collective, city, country, incentive_text, created);
         logger.info("Sent to IS: '" + classification.toString() + "'.");
         pusher.trigger("ouroboros", "classification", classification);
+    }
+
+    private static String tryGetLocation(JSONObject location, String fieldName){
+        try{
+            return location.getString(fieldName);
+        } catch (JSONException je) {
+            return "UNKNOWN";
+        }
     }
 
     /**
@@ -213,7 +231,7 @@ public class IncentiveAdapter{
         String intervention = jsonObject.getString("intervention_text");
         Message.MessageBuilder builder =
                 new Message.MessageBuilder()
-                        .setType("APP_ID") //TODO: fix type field
+                        .setType("app-id") //TODO: fix type field
                         .setSubtype("reminder")
                         .setSenderId(Identifier.component("IS"))
                         .setConversationId(conversation)

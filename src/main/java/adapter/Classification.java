@@ -1,7 +1,7 @@
 package adapter;
 
 /**
- * Created by shakedhi on 8/18/16.
+ * @author Shaked Hindi
  */
 public class Classification {
     private String project;
@@ -11,7 +11,7 @@ public class Classification {
     private String created_at;
 
     Classification(String user, String city, String country, String subj, String created){
-        this.project = "smartcom";
+        this.project = "SmartSociety";
         this.user_id = user;
         this.geo = new Geographic(city, country);
         this.subjects = subj;
