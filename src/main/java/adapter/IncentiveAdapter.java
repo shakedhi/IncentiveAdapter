@@ -5,23 +5,28 @@ import at.ac.tuwien.dsg.smartcom.SmartCom;
 import at.ac.tuwien.dsg.smartcom.SmartComBuilder;
 import at.ac.tuwien.dsg.smartcom.callback.exception.NoSuchCollectiveException;
 import at.ac.tuwien.dsg.smartcom.exception.CommunicationException;
-import at.ac.tuwien.dsg.smartcom.model.*;
+import at.ac.tuwien.dsg.smartcom.model.CollectiveInfo;
+import at.ac.tuwien.dsg.smartcom.model.Identifier;
+import at.ac.tuwien.dsg.smartcom.model.Message;
+import com.pusher.client.channel.Channel;
+import com.pusher.client.connection.ConnectionEventListener;
+import com.pusher.client.connection.ConnectionState;
+import com.pusher.client.connection.ConnectionStateChange;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.TimeZone;
 import java.util.concurrent.ConcurrentHashMap;
-
-import com.pusher.client.connection.*;
-import org.json.*;
-import org.apache.log4j.Logger;
-import org.apache.log4j.LogManager;
-import spark.Request;
-import spark.Response;
-
-import static spark.Spark.*;
 
 /**
  * @author Shaked Hindi
@@ -41,7 +46,6 @@ public class IncentiveAdapter{
         //set up
         System.out.println("Initializing server...");
         init();
-        System.out.println("Server is running at http://localhost:8083.");
 
         //wait for close
         System.out.println("Press enter to exit.");
@@ -50,7 +54,6 @@ public class IncentiveAdapter{
         //tear down
         smartCom.tearDownSmartCom();
         pusherclient.disconnect();
-        stop();
         System.out.println("Shutdown complete");
     }
 
@@ -80,33 +83,21 @@ public class IncentiveAdapter{
             }
         }, ConnectionState.ALL);
 
-        pusherclient.subscribe("adapter").bind("intervention", (chan, event, data) -> {
+        Channel channel = pusherclient.subscribe("adapter");
+
+        channel.bind("intervention", (chan, event, data) -> {
             logger.info("Received intervention request (data: " + data + ")");
             sendIntervention(data);
         });
 
-        //initialize server
-        port(8083);
-        get("/*", (request, response) -> badRequest(response));
-        put("/*", (request, response) -> badRequest(response));
-        delete("/*", (request, response) -> badRequest(response));
-        options("/*", (request, response) -> badRequest(response));
-        post("/invalidate/:id", (request, response) -> {
-            try {
-                if (Integer.parseInt(request.params(":id")) < 1)
-                    return badRequest(response);
-                invalidatePeers(request);
-                return successfulRequest(response);
-            } catch (NumberFormatException e){
-                return badRequest(response);
-            }
+        channel.bind("reminder", (chan, event, data) -> {
+            logger.info("Received reminder request (data: " + data + ")");
+            handleReminderRequest(data);
         });
-        post("/*", (request, response) -> {
-            if (request.splat().length == 1 && request.splat()[0].equals("reminder")){
-                handleReminderRequest(request);
-                return successfulRequest(response);
-            }
-            return badRequest(response);
+
+        channel.bind("invalidate", (chan, event, data) -> {
+            logger.info("Received invalidate request (data: " + data + ")");
+            invalidatePeers(data);
         });
 
         //connect to PeerManager
@@ -123,35 +114,15 @@ public class IncentiveAdapter{
     }
 
     /**
-     * Sets the response status to 400 and returns an http page
-     * @param response the Response Object
-     * @return http page content
-     */
-    private static String badRequest(Response response){
-        response.status(400);
-        return "<h1>The server supports only POST request with a '/reminder' postfix or a '/invalidate/{collective_id}' postfix.</h1>";
-    }
-
-    /**
-     * Sets the response status to 200 and returns an http page
-     * @param response the Response Object
-     * @return http page content
-     */
-    private static String successfulRequest(Response response){
-        response.status(200);
-        return "<h1>Success</h1>";
-    }
-
-    /**
-     * Gets a POST request, parses its content, creates a Classification Object
+     * Gets a reminder request, parses its content, creates a Classification Object
      * and send it to the Incentive Server
-     * @param request the POST request
+     * @param request the reminder request, represented by JSON
      */
-    private static void handleReminderRequest(Request request){
+    private static void handleReminderRequest(String request){
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
 
-        String content = request.body();
-        String formattedContent = content.replaceAll("\\r\\n|\\r|\\n|\\s|\\u00A0|\\u2007|\\u202F","");
+        String formattedContent = request.replaceAll("(\\t|\\r|\\n|\\s|\\u00A0|\\u2007|\\u202F)+"," ");
         logger.info("Reminder received: '" + formattedContent + "'.");
 
         JSONObject jContent = new JSONObject(formattedContent);
@@ -168,6 +139,7 @@ public class IncentiveAdapter{
         //send message to incentive server
         Classification classification = new Classification(collective, city, country, incentive_text, created);
         logger.info("Sent to IS: '" + classification.toString() + "'.");
+        System.exit(0);
         pusher.trigger("ouroboros", "classification", classification);
     }
 
@@ -180,13 +152,14 @@ public class IncentiveAdapter{
     }
 
     /**
-     * Gets POST request with a collective and a list of peers and
+     * Gets an invalidate request with a collective and a list of peers and
      * adds them to the corresponding invalidated peers list
-     * @param request the POST request
+     * @param request the invalidate request, represented by JSON
      */
-    private static void invalidatePeers(Request request) {
-        String collective = request.params(":id");
-        String experts = request.body();
+    private static void invalidatePeers(String request) {
+        JSONObject jRequest = new JSONObject(request);
+        String collective = jRequest.getString("collective");
+        JSONArray peers = jRequest.getJSONArray("peers");
         Identifier collectiveId = Identifier.collective(collective);
         List<Identifier> invalidated = invalidatedPeers.get(collectiveId);
 
@@ -196,12 +169,11 @@ public class IncentiveAdapter{
         }
 
         //parse json array and add experts to collective invalidated list
-        JSONArray peers = new JSONArray(experts);
         Identifier peerId;
         for(int i = 0; i < peers.length(); i++){
             peerId = Identifier.peer(peers.getJSONObject(i).getString("id"));
             invalidated.add(peerId);
-            logger.info("Peer " + peerId + " was invalidated from collective " + collective);
+            logger.info("Peer " + peerId.getId() + " was invalidated from collective " + collective);
         }
     }
 
@@ -226,21 +198,19 @@ public class IncentiveAdapter{
             return;
         }
 
-        // build message template
+        // send message for each experts that should be reminded
+        Message.MessageBuilder builder;
         String conversation = jsonObject.getString("intervention_type");
         String intervention = jsonObject.getString("intervention_text");
-        Message.MessageBuilder builder =
-                new Message.MessageBuilder()
-                        .setType("app-id") //TODO: fix type field
-                        .setSubtype("reminder")
-                        .setSenderId(Identifier.component("IS"))
-                        .setConversationId(conversation)
-                        .setContent(intervention);
-
-        // send message for each experts that should be reminded
         try{
             for (Identifier id : shouldBeReminded){
-                builder.setReceiverId(id);
+                builder = new Message.MessageBuilder()
+                                .setType("appid") //TODO: fix type field
+                                .setSubtype("reminder")
+                                .setSenderId(Identifier.component("IS"))
+                                .setConversationId(conversation)
+                                .setContent(intervention)
+                                .setReceiverId(id);
                 m = builder.create();
                 communication.send(m);
             }

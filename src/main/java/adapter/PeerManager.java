@@ -11,28 +11,28 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.log4j.Logger;
 import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author Shaked Hindi
  */
-public class PeerManager implements PeerAuthenticationCallback, PeerInfoCallback, CollectiveInfoCallback {
+class PeerManager implements PeerAuthenticationCallback, PeerInfoCallback, CollectiveInfoCallback {
     private static final Logger logger = LogManager.getLogger(PeerManager.class);
     private static PeerManager peerManager;
-    private final String PM_URL = "http://elog.disi.unitn.it:8081/kos-smartsociety/smartsociety-peermanager";
-    private final String GET_COLLECTIVE = "/collectives/";
-    private final String GET_PEER = "/askProfile/";
 
     private PeerManager() {}
 
-    public static PeerManager instance() {
+    static PeerManager instance() {
         if (peerManager == null)
             peerManager = new PeerManager();
         return peerManager;
@@ -40,9 +40,10 @@ public class PeerManager implements PeerAuthenticationCallback, PeerInfoCallback
 
     private String getRequest(String requestType, String id){
         HttpClient httpClient = HttpClientBuilder.create().build();
+        String pm_url = "http://elog.disi.unitn.it:8081/kos-smartsociety/smartsociety-peermanager/";
         try{
             // send get request
-            HttpGet request = new HttpGet(PM_URL + requestType + id);
+            HttpGet request = new HttpGet(pm_url + requestType + id);
             HttpResponse response = httpClient.execute(request);
 
             // check status code
@@ -68,11 +69,11 @@ public class PeerManager implements PeerAuthenticationCallback, PeerInfoCallback
 
     @Override
     public CollectiveInfo getCollectiveInfo(Identifier collective) throws NoSuchCollectiveException {
-        String response = getRequest(GET_COLLECTIVE, collective.getId());
+        String response = getRequest("collectives/", collective.getId());
         if(response.contains("Cannot find a collective"))
             throw new NoSuchCollectiveException();
 
-        response = response.replaceAll("\\r\\n|\\r|\\n|\\s|\\u00A0|\\u2007|\\u202F","");
+        response = response.replaceAll("(\\t|\\r|\\n|\\s|\\u00A0|\\u2007|\\u202F)+"," ");
         JSONObject content = new JSONObject(response);
 
         JSONArray collectedUsers = content.getJSONArray("collectedUsers");
@@ -84,7 +85,7 @@ public class PeerManager implements PeerAuthenticationCallback, PeerInfoCallback
         CollectiveInfo info = new CollectiveInfo();
         info.setId(collective);
         info.setPeers(peers);
-        info.setDeliveryPolicy(DeliveryPolicy.Collective.TO_ALL_MEMBERS);
+        info.setDeliveryPolicy(DeliveryPolicy.Collective.TO_ANY);
 
         return info;
     }
@@ -96,11 +97,11 @@ public class PeerManager implements PeerAuthenticationCallback, PeerInfoCallback
 
     @Override
     public PeerInfo getPeerInfo(Identifier id) throws NoSuchPeerException {
-        String response = getRequest(GET_PEER, id.getId());
+        String response = getRequest("askProfile/", id.getId());
         if(response.equals("{}"))
             throw new NoSuchPeerException(id);
 
-        response = response.replaceAll("\\r\\n|\\r|\\n|\\s|\\u00A0|\\u2007|\\u202F","");
+        response = response.replaceAll("(\\t|\\r|\\n|\\s|\\u00A0|\\u2007|\\u202F)+"," ");
         JSONObject content = new JSONObject(response);
 
         //TODO: replace DeliveryPolicy.Peer policy = DeliveryPolicy.Peer.values()[content.getInt("deliveryPolicy")];

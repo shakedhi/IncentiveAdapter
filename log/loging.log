@@ -1,0 +1,145 @@
+2016-08-30 15:50:15 INFO  IncentiveAdapter:69 - Pusher client is CONNECTED
+2016-08-30 15:55:04 INFO  IncentiveAdapter:69 - Pusher client is CONNECTED
+2016-08-30 15:59:27 INFO  IncentiveAdapter:86 - Received reminder request (data: {"recipient": {"type": "collective", "id": "6802"}, "incentive_text": "hello!", "incentive_type": "reminder", "location": {"city_name": "Hadera", "country_name": "Israel"}, "incentive_timestamp": "1472562180000"})
+2016-08-30 15:59:27 INFO  IncentiveAdapter:117 - Reminder received: '{"recipient":{"type":"collective","id":"6802"},"incentive_text":"hello!","incentive_type":"reminder","location":{"city_name":"Hadera","country_name":"Israel"},"incentive_timestamp":"1472562180000"}'.
+2016-08-30 15:59:27 INFO  IncentiveAdapter:132 - Sent to IS: '{ "project":"SmartSociety", "user_id":"6802", "geo":"{ "city_name:"Hadera", "country_name:"Israel" }", "subject":"hello!", "created_at":"2016-08-30T16:03:00+03:00" }'.
+2016-08-30 16:00:43 INFO  IncentiveAdapter:91 - Received invalidate request (data: {"collective": "6802", "peers": [{"type": "peer", "id": "JhonnyD"}, {"type": "peer", "id": "Niceguy2"}]})
+2016-08-30 16:00:43 INFO  IncentiveAdapter:166 - Peer Identifier{type=PEER, id='JhonnyD', postfix=''} was invalidated from collective 6802
+2016-08-30 16:00:43 INFO  IncentiveAdapter:166 - Peer Identifier{type=PEER, id='Niceguy2', postfix=''} was invalidated from collective 6802
+2016-08-30 16:22:05 INFO  IncentiveAdapter:69 - Pusher client is CONNECTED
+2016-08-30 16:25:36 INFO  IncentiveAdapter:86 - Received reminder request (data: {"recipient": {"type": "collective", "id": "6802"}, "incentive_text": "hello!", "incentive_type": "reminder", "location": {"city_name": "Hadera", "country_name": "Israel"}, "incentive_timestamp": "1472563740000"})
+2016-08-30 16:25:36 INFO  IncentiveAdapter:118 - Reminder received: '{"recipient":{"type":"collective","id":"6802"},"incentive_text":"hello!","incentive_type":"reminder","location":{"city_name":"Hadera","country_name":"Israel"},"incentive_timestamp":"1472563740000"}'.
+2016-08-30 16:25:36 INFO  IncentiveAdapter:133 - Sent to IS: '{ "project":"SmartSociety", "user_id":"6802", "geo":"{ "city_name:"Hadera", "country_name:"Israel" }", "subject":"hello!", "created_at":"2016-08-30T13:29:00Z" }'.
+2016-08-30 16:25:43 INFO  IncentiveAdapter:81 - Received intervention request (data: {"project": "smartcom", "intervention_text": "hello!", "collective_id": "6802", "intervention_type": "reminder"})
+2016-08-30 16:25:44 INFO  PeerManager:61 - {  "collectedUsers": [    "JhonnyD",    "Niceguy2",    "AlbertW"  ]}
+2016-08-30 16:25:45 INFO  PeerManager:61 - {  "username": "shakedhi",  "available": true,  "deliveryPolicy": 0,  "deliveryAddress": [    {      "channelType": "Email",      "contactParams": [        "shakedhi@post.bgu.ac.il"      ]    }  ]}
+2016-08-30 16:28:40 INFO  IncentiveAdapter:91 - Received invalidate request (data: {"collective": "6802", "peers": [{"type": "peer", "id": "JhonnyD"}]})
+2016-08-30 16:28:40 ERROR IncentiveAdapter:158 - null list (id: 6802).
+2016-08-30 16:33:29 INFO  IncentiveAdapter:69 - Pusher client is CONNECTED
+2016-08-30 16:35:35 INFO  IncentiveAdapter:86 - Received reminder request (data: {"recipient": {"type": "collective", "id": "6802"}, "incentive_text": "hello!", "incentive_type": "reminder", "location": {"city_name": "Hadera", "country_name": "Israel"}, "incentive_timestamp": "1472564280000"})
+2016-08-30 16:35:35 INFO  IncentiveAdapter:118 - Reminder received: '{"recipient":{"type":"collective","id":"6802"},"incentive_text":"hello!","incentive_type":"reminder","location":{"city_name":"Hadera","country_name":"Israel"},"incentive_timestamp":"1472564280000"}'.
+2016-08-30 16:35:35 INFO  IncentiveAdapter:133 - Sent to IS: '{ "project":"SmartSociety", "user_id":"6802", "geo":"{ "city_name:"Hadera", "country_name:"Israel" }", "subject":"hello!", "created_at":"2016-08-30T13:38:00Z" }'.
+2016-08-30 16:35:49 INFO  IncentiveAdapter:81 - Received intervention request (data: {"project": "smartcom", "intervention_text": "hello!", "collective_id": "6802", "intervention_type": "reminder"})
+2016-08-30 16:35:50 INFO  PeerManager:61 - {  "collectedUsers": [    "JhonnyD",    "Niceguy2",    "AlbertW"  ]}
+2016-08-30 16:35:51 INFO  PeerManager:61 - {  "username": "shakedhi",  "available": true,  "deliveryPolicy": 0,  "deliveryAddress": [    {      "channelType": "Email",      "contactParams": [        "shakedhi@post.bgu.ac.il"      ]    }  ]}
+2016-08-30 16:37:46 INFO  IncentiveAdapter:69 - Pusher client is CONNECTED
+2016-08-30 16:38:29 INFO  IncentiveAdapter:86 - Received reminder request (data: {"recipient": {"type": "collective", "id": "6802"}, "incentive_text": "hello!", "incentive_type": "reminder", "location": {"city_name": "Hadera", "country_name": "Israel"}, "incentive_timestamp": "1472564280000"})
+2016-08-30 16:38:29 INFO  IncentiveAdapter:118 - Reminder received: '{"recipient":{"type":"collective","id":"6802"},"incentive_text":"hello!","incentive_type":"reminder","location":{"city_name":"Hadera","country_name":"Israel"},"incentive_timestamp":"1472564280000"}'.
+2016-08-30 16:38:29 INFO  IncentiveAdapter:133 - Sent to IS: '{ "project":"SmartSociety", "user_id":"6802", "geo":"{ "city_name:"Hadera", "country_name:"Israel" }", "subject":"hello!", "created_at":"2016-08-30T13:38:00Z" }'.
+2016-08-30 16:38:32 INFO  IncentiveAdapter:81 - Received intervention request (data: {"project": "smartcom", "intervention_text": "hello!", "collective_id": "6802", "intervention_type": "reminder"})
+2016-08-30 16:38:33 INFO  PeerManager:61 - {  "collectedUsers": [    "JhonnyD",    "Niceguy2",    "AlbertW"  ]}
+2016-08-30 16:38:33 INFO  PeerManager:61 - {  "username": "shakedhi",  "available": true,  "deliveryPolicy": 0,  "deliveryAddress": [    {      "channelType": "Email",      "contactParams": [        "shakedhi@post.bgu.ac.il"      ]    }  ]}
+2016-08-30 16:48:41 ERROR IncentiveAdapter:74 - There is a connection problem!
+2016-08-30 16:48:41 INFO  IncentiveAdapter:69 - Pusher client is DISCONNECTED
+2016-08-30 17:47:15 INFO  IncentiveAdapter:69 - Pusher client is CONNECTED
+2016-08-30 17:49:38 INFO  IncentiveAdapter:86 - Received reminder request (data: {"recipient": {"type": "collective", "id": "6802"}, "incentive_text": "hello!", "incentive_type": "reminder", "location": {"city_name": "Hadera", "country_name": "Israel"}, "incentive_timestamp": "1472568900000"})
+2016-08-30 17:49:38 INFO  IncentiveAdapter:118 - Reminder received: '{"recipient":{"type":"collective","id":"6802"},"incentive_text":"hello!","incentive_type":"reminder","location":{"city_name":"Hadera","country_name":"Israel"},"incentive_timestamp":"1472568900000"}'.
+2016-08-30 17:49:38 INFO  IncentiveAdapter:133 - Sent to IS: '{ "project":"SmartSociety", "user_id":"6802", "geo":"{ "city_name:"Hadera", "country_name:"Israel" }", "subject":"hello!", "created_at":"2016-08-30T14:55:00Z" }'.
+2016-08-30 17:49:52 INFO  IncentiveAdapter:81 - Received intervention request (data: {"project": "SmartSociety", "intervention_text": "hello!", "collective_id": "6802", "intervention_type": "reminder"})
+2016-08-30 17:49:53 INFO  PeerManager:61 - {  "collectedUsers": [    "JhonnyD",    "Niceguy2",    "AlbertW"  ]}
+2016-08-30 17:49:54 INFO  PeerManager:61 - {  "username": "shakedhi",  "available": true,  "deliveryPolicy": 0,  "deliveryAddress": [    {      "channelType": "Email",      "contactParams": [        "shakedhi@post.bgu.ac.il"      ]    }  ]}
+2016-08-30 17:52:58 INFO  IncentiveAdapter:69 - Pusher client is CONNECTED
+2016-08-30 17:53:37 INFO  IncentiveAdapter:86 - Received reminder request (data: {"recipient": {"type": "collective", "id": "6802"}, "incentive_text": "hello!", "incentive_type": "reminder", "location": {"city_name": "Hadera", "country_name": "Israel"}, "incentive_timestamp": "1472568900000"})
+2016-08-30 17:53:37 INFO  IncentiveAdapter:118 - Reminder received: '{"recipient":{"type":"collective","id":"6802"},"incentive_text":"hello!","incentive_type":"reminder","location":{"city_name":"Hadera","country_name":"Israel"},"incentive_timestamp":"1472568900000"}'.
+2016-08-30 17:53:37 INFO  IncentiveAdapter:133 - Sent to IS: '{ "project":"SmartSociety", "user_id":"6802", "geo":"{ "city_name:"Hadera", "country_name:"Israel" }", "subject":"hello!", "created_at":"2016-08-30T14:55:00Z" }'.
+2016-08-30 17:53:45 INFO  IncentiveAdapter:81 - Received intervention request (data: {"project": "SmartSociety", "intervention_text": "hello!", "collective_id": "6802", "intervention_type": "reminder"})
+2016-08-30 17:53:45 INFO  PeerManager:61 - {  "collectedUsers": [    "JhonnyD",    "Niceguy2",    "AlbertW"  ]}
+2016-08-30 17:53:45 INFO  PeerManager:61 - {  "username": "shakedhi",  "available": true,  "deliveryPolicy": 0,  "deliveryAddress": [    {      "channelType": "Email",      "contactParams": [        "shakedhi@post.bgu.ac.il"      ]    }  ]}
+2016-08-30 17:59:36 INFO  IncentiveAdapter:69 - Pusher client is CONNECTED
+2016-08-30 18:00:23 INFO  IncentiveAdapter:86 - Received reminder request (data: {"recipient": {"type": "collective", "id": "6802"}, "incentive_text": "hello!", "incentive_type": "reminder", "location": {"city_name": "Hadera", "country_name": "Israel"}, "incentive_timestamp": "1472568900000"})
+2016-08-30 18:00:23 INFO  IncentiveAdapter:118 - Reminder received: '{"recipient":{"type":"collective","id":"6802"},"incentive_text":"hello!","incentive_type":"reminder","location":{"city_name":"Hadera","country_name":"Israel"},"incentive_timestamp":"1472568900000"}'.
+2016-08-30 18:00:23 INFO  IncentiveAdapter:133 - Sent to IS: '{ "project":"SmartSociety", "user_id":"6802", "geo":"{ "city_name:"Hadera", "country_name:"Israel" }", "subject":"hello!", "created_at":"2016-08-30T14:55:00Z" }'.
+2016-08-30 18:00:28 INFO  IncentiveAdapter:81 - Received intervention request (data: {"project": "SmartSociety", "intervention_text": "hello!", "collective_id": "6802", "intervention_type": "reminder"})
+2016-08-30 18:00:31 INFO  PeerManager:61 - {  "collectedUsers": [    "JhonnyD",    "Niceguy2",    "AlbertW"  ]}
+2016-08-30 18:00:31 INFO  IncentiveAdapter:219 - Reminder was sent to the peers of collective 6802 that didn't respond.
+2016-08-30 18:00:31 INFO  PeerManager:61 - {  "username": "shakedhi",  "available": true,  "deliveryPolicy": 0,  "deliveryAddress": [    {      "channelType": "Email",      "contactParams": [        "shakedhi@post.bgu.ac.il"      ]    }  ]}
+2016-08-30 18:06:17 INFO  IncentiveAdapter:86 - Received reminder request (data: {"recipient": {"type": "collective", "id": "6802"}, "incentive_text": "12312", "incentive_type": "reminder", "location": {"city_name": "Hadera", "country_name": "Israel"}, "incentive_timestamp": "1472568900000"})
+2016-08-30 18:06:17 INFO  IncentiveAdapter:118 - Reminder received: '{"recipient":{"type":"collective","id":"6802"},"incentive_text":"12312","incentive_type":"reminder","location":{"city_name":"Hadera","country_name":"Israel"},"incentive_timestamp":"1472568900000"}'.
+2016-08-30 18:06:17 INFO  IncentiveAdapter:133 - Sent to IS: '{ "project":"SmartSociety", "user_id":"6802", "geo":"{ "city_name:"Hadera", "country_name:"Israel" }", "subject":"12312", "created_at":"2016-08-30T14:55:00Z" }'.
+2016-08-30 18:06:24 INFO  IncentiveAdapter:81 - Received intervention request (data: {"project": "SmartSociety", "intervention_text": "12312", "collective_id": "6802", "intervention_type": "reminder"})
+2016-08-30 18:06:27 INFO  PeerManager:61 - {  "collectedUsers": [    "JhonnyD",    "Niceguy2",    "AlbertW"  ]}
+2016-08-30 18:06:27 INFO  IncentiveAdapter:219 - Reminder was sent to the peers of collective 6802 that didn't respond.
+2016-08-30 18:13:42 INFO  IncentiveAdapter:86 - Received reminder request (data: {"recipient": {"type": "collective", "id": "6802"}, "incentive_text": "hello!", "incentive_type": "reminder", "location": {"city_name": "Hadera", "country_name": "Israel"}, "incentive_timestamp": "1472570220000"})
+2016-08-30 18:13:44 INFO  IncentiveAdapter:118 - Reminder received: '{"recipient":{"type":"collective","id":"6802"},"incentive_text":"hello!","incentive_type":"reminder","location":{"city_name":"Hadera","country_name":"Israel"},"incentive_timestamp":"1472570220000"}'.
+2016-08-30 18:13:46 INFO  IncentiveAdapter:133 - Sent to IS: '{ "project":"SmartSociety", "user_id":"6802", "geo":"{ "city_name:"Hadera", "country_name:"Israel" }", "subject":"hello!", "created_at":"2016-08-30T15:17:00Z" }'.
+2016-08-30 18:15:41 INFO  IncentiveAdapter:91 - Received invalidate request (data: {"collective": "6802", "peers": [{"type": "peer", "id": "JhonnyD"}, {"type": "peer", "id": "Niceguy2"}]})
+2016-08-30 18:15:41 INFO  IncentiveAdapter:167 - Peer Identifier{type=PEER, id='JhonnyD', postfix=''} was invalidated from collective 6802
+2016-08-30 18:15:41 INFO  IncentiveAdapter:167 - Peer Identifier{type=PEER, id='Niceguy2', postfix=''} was invalidated from collective 6802
+2016-08-30 18:17:00 INFO  IncentiveAdapter:81 - Received intervention request (data: {"project": "SmartSociety", "intervention_text": "hello!", "collective_id": "6802", "intervention_type": "reminder"})
+2016-08-30 18:17:01 INFO  PeerManager:61 - {  "collectedUsers": [    "JhonnyD",    "Niceguy2",    "AlbertW"  ]}
+2016-08-30 18:17:01 INFO  IncentiveAdapter:219 - Reminder was sent to the peers of collective 6802 that didn't respond.
+2016-08-30 18:17:02 INFO  PeerManager:61 - {  "username": "shakedhi",  "available": true,  "deliveryPolicy": 0,  "deliveryAddress": [    {      "channelType": "Email",      "contactParams": [        "shakedhi@post.bgu.ac.il"      ]    }  ]}
+2016-08-30 18:20:19 INFO  IncentiveAdapter:69 - Pusher client is CONNECTED
+2016-08-30 18:20:36 INFO  IncentiveAdapter:86 - Received reminder request (data: {"recipient": {"type": "collective", "id": "6802"}, "incentive_text": "oh yeahhhhhhhhhhhhh", "incentive_type": "reminder", "location": {"city_name": "Hadera", "country_name": "Israel"}, "incentive_timestamp": "1472570520000"})
+2016-08-30 18:20:36 INFO  IncentiveAdapter:118 - Reminder received: '{"recipient":{"type":"collective","id":"6802"},"incentive_text":"ohyeahhhhhhhhhhhhh","incentive_type":"reminder","location":{"city_name":"Hadera","country_name":"Israel"},"incentive_timestamp":"1472570520000"}'.
+2016-08-30 18:21:38 INFO  IncentiveAdapter:86 - Received reminder request (data: {"recipient": {"type": "collective", "id": "6802"}, "incentive_text": "hello my friend!", "incentive_type": "reminder", "location": {"city_name": "Hadera", "country_name": "Israel"}, "incentive_timestamp": "1472570640000"})
+2016-08-30 18:21:38 INFO  IncentiveAdapter:118 - Reminder received: '{"recipient":{"type":"collective","id":"6802"},"incentive_text":"hellomyfriend!","incentive_type":"reminder","location":{"city_name":"Hadera","country_name":"Israel"},"incentive_timestamp":"1472570640000"}'.
+2016-08-30 18:21:38 INFO  IncentiveAdapter:133 - Sent to IS: '{ "project":"SmartSociety", "user_id":"6802", "geo":"{ "city_name:"Hadera", "country_name:"Israel" }", "subject":"hellomyfriend!", "created_at":"2016-08-30T15:24:00Z" }'.
+2016-08-30 18:22:36 INFO  IncentiveAdapter:91 - Received invalidate request (data: {"collective": "6802", "peers": [{"type": "peer", "id": "JhonnyD"}, {"type": "peer", "id": "Niceguy2"}]})
+2016-08-30 18:22:36 INFO  IncentiveAdapter:167 - Peer Identifier{type=PEER, id='JhonnyD', postfix=''} was invalidated from collective 6802
+2016-08-30 18:22:36 INFO  IncentiveAdapter:167 - Peer Identifier{type=PEER, id='Niceguy2', postfix=''} was invalidated from collective 6802
+2016-08-30 18:23:13 INFO  IncentiveAdapter:86 - Received reminder request (data: {"recipient": {"type": "collective", "id": "6801"}, "incentive_text": "blaaa", "incentive_type": "reminder", "location": {"city_name": "Hadera", "country_name": "Israel"}, "incentive_timestamp": "1472570640000"})
+2016-08-30 18:23:13 INFO  IncentiveAdapter:118 - Reminder received: '{"recipient":{"type":"collective","id":"6801"},"incentive_text":"blaaa","incentive_type":"reminder","location":{"city_name":"Hadera","country_name":"Israel"},"incentive_timestamp":"1472570640000"}'.
+2016-08-30 18:23:13 INFO  IncentiveAdapter:133 - Sent to IS: '{ "project":"SmartSociety", "user_id":"6801", "geo":"{ "city_name:"Hadera", "country_name:"Israel" }", "subject":"blaaa", "created_at":"2016-08-30T15:24:00Z" }'.
+2016-08-30 18:24:01 INFO  IncentiveAdapter:81 - Received intervention request (data: {"project": "SmartSociety", "intervention_text": "hellomyfriend!", "collective_id": "6802", "intervention_type": "reminder"})
+2016-08-30 18:24:01 INFO  PeerManager:61 - {  "collectedUsers": [    "JhonnyD",    "Niceguy2",    "AlbertW"  ]}
+2016-08-30 18:24:02 INFO  IncentiveAdapter:211 - Reminder was sent to the peers of collective 6802 that didn't respond.
+2016-08-30 18:24:02 INFO  IncentiveAdapter:81 - Received intervention request (data: {"project": "SmartSociety", "intervention_text": "blaaa", "collective_id": "6801", "intervention_type": "reminder"})
+2016-08-30 18:24:02 INFO  PeerManager:61 - {  "collectedUsers": [    "JhonnyD",    "Niceguy2",    "AlbertW"  ]}
+2016-08-30 18:24:02 INFO  IncentiveAdapter:211 - Reminder was sent to the peers of collective 6801 that didn't respond.
+2016-08-30 18:24:02 INFO  PeerManager:61 - {  "username": "shakedhi",  "available": true,  "deliveryPolicy": 0,  "deliveryAddress": [    {      "channelType": "Email",      "contactParams": [        "shakedhi@post.bgu.ac.il"      ]    }  ]}
+2016-08-30 18:30:26 INFO  IncentiveAdapter:69 - Pusher client is CONNECTED
+2016-08-30 18:33:11 INFO  IncentiveAdapter:86 - Received reminder request (data: {"recipient": {"type": "collective", "id": "6802"}, "incentive_text": "hello my friend!", "incentive_type": "reminder", "location": {"city_name": "Hadera", "country_name": "Israel"}, "incentive_timestamp": "1472571325000"})
+2016-08-30 18:33:11 INFO  IncentiveAdapter:118 - Reminder received: '{"recipient": {"type": "collective", "id": "6802"}, "incentive_text": "hello my friend!", "incentive_type": "reminder", "location": {"city_name": "Hadera", "country_name": "Israel"}, "incentive_timestamp": "1472571325000"}'.
+2016-08-30 18:35:40 INFO  IncentiveAdapter:69 - Pusher client is CONNECTED
+2016-08-30 18:36:13 INFO  IncentiveAdapter:86 - Received reminder request (data: {"recipient": {"type": "collective", "id": "6802"}, "incentive_text": "hello my friend!", "incentive_type": "reminder", "location": {"city_name": "Hadera", "country_name": "Israel"}, "incentive_timestamp": "1472571350000"})
+2016-08-30 18:36:13 INFO  IncentiveAdapter:131 - Reminder received: '    {
+  "incentive_type": "reminder",
+  "incentive_text": 
+     "{\"task_id\": \"969cef30-c352-11e5-8e1c-0242ac120002\"}",
+  "incentive_timestamp": \u00A0"1456392624000",
+  "location": {
+  	"city_name": \u00A0\u00A0\u00A0"Hadera",
+  	"country_name": "Israel"
+  },
+  "recipient": {
+    "type": "collective",
+    "id": "6802"
+  }
+}'.
+2016-08-30 18:36:13 INFO  IncentiveAdapter:133 - Reminder received: ' { "incentive_type": "reminder", "incentive_text": "{\"task_id\": \"969cef30-c352-11e5-8e1c-0242ac120002\"}", "incentive_timestamp": \u00A0"1456392624000", "location": { "city_name": \u00A0\u00A0\u00A0"Hadera", "country_name": "Israel" }, "recipient": { "type": "collective", "id": "6802" } }'.
+2016-08-30 18:37:20 INFO  IncentiveAdapter:69 - Pusher client is CONNECTED
+2016-08-30 18:37:41 INFO  IncentiveAdapter:86 - Received reminder request (data: {"recipient": {"type": "collective", "id": "6802"}, "incentive_text": "hello my friend!", "incentive_type": "reminder", "location": {"city_name": "Hadera", "country_name": "Israel"}, "incentive_timestamp": "1472571430000"})
+2016-08-30 18:37:41 INFO  IncentiveAdapter:131 - Reminder received: '    {
+  "incentive_type": "reminder",
+  "incentive_text": 
+     "{\"task_id\": \"969cef30-c352-11e5-8e1c-0242ac120002\"}",
+  "incentive_timestamp":  "1456392624000",
+  "location": {
+  	"city_name":    "Hadera",
+  	"country_name": "Israel"
+  },
+  "recipient": {
+    "type": "collective",
+    "id": "6802"
+  }
+}'.
+2016-08-30 18:37:41 INFO  IncentiveAdapter:133 - Reminder received: ' { "incentive_type": "reminder", "incentive_text": "{\"task_id\": \"969cef30-c352-11e5-8e1c-0242ac120002\"}", "incentive_timestamp": "1456392624000", "location": { "city_name": "Hadera", "country_name": "Israel" }, "recipient": { "type": "collective", "id": "6802" } }'.
+2016-08-30 18:38:28 INFO  IncentiveAdapter:69 - Pusher client is CONNECTED
+2016-08-30 18:38:54 INFO  IncentiveAdapter:86 - Received reminder request (data: {"recipient": {"type": "collective", "id": "6802"}, "incentive_text": "hello my friend!", "incentive_type": "reminder", "location": {"city_name": "Hadera", "country_name": "Israel"}, "incentive_timestamp": "1472571504000"})
+2016-08-30 18:38:54 INFO  IncentiveAdapter:131 - Reminder received: '    {
+  "incentive_type": "reminder",
+  "incentive_text": 
+     "{\"task_id\": \"969cef30-c352-11e5-8e1c-0242ac120002\"}",
+  "incentive_timestamp":  "1456392624000",
+  "location": {
+  	"city_name":    "Hadera",
+  	"country_name": "Israel"
+  },
+  "recipient": {
+    "type": "collective",
+    "id": "6802"
+  }
+}'.
+2016-08-30 18:38:54 INFO  IncentiveAdapter:133 - Reminder received: ' { "incentive_type": "reminder", "incentive_text": "{\"task_id\": \"969cef30-c352-11e5-8e1c-0242ac120002\"}", "incentive_timestamp": "1456392624000", "location": { "city_name": "Hadera", "country_name": "Israel" }, "recipient": { "type": "collective", "id": "6802" } }'.
+2016-08-30 18:38:54 INFO  IncentiveAdapter:148 - Sent to IS: '{ "project":"SmartSociety", "user_id":"6802", "geo":"{ "city_name:"Hadera", "country_name:"Israel" }", "subject":"{"task_id": "969cef30-c352-11e5-8e1c-0242ac120002"}", "created_at":"2016-02-25T09:30:24Z" }'.
