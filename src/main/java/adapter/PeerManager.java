@@ -54,13 +54,14 @@ class PeerManager implements PeerAuthenticationCallback, PeerInfoCallback, Colle
             // read content
             InputStream content = response.getEntity().getContent();
             BufferedReader rd = new BufferedReader(new InputStreamReader(content));
-            StringBuilder result = new StringBuilder();
+            StringBuilder sb = new StringBuilder();
             String line;
             while ((line = rd.readLine()) != null)
-                result.append(line);
+                sb.append(line);
 
-            logger.info(result.toString());
-            return result.toString();
+            String result = sb.toString().replaceAll("(\\t|\\r|\\n|\\s|\\u00A0|\\u2007|\\u202F)+"," ");
+            logger.info(result);
+            return result;
         } catch (IOException e){
             logger.error("IOException " + e.getMessage());
             return "{}";
@@ -73,7 +74,6 @@ class PeerManager implements PeerAuthenticationCallback, PeerInfoCallback, Colle
         if(response.contains("Cannot find a collective"))
             throw new NoSuchCollectiveException();
 
-        response = response.replaceAll("(\\t|\\r|\\n|\\s|\\u00A0|\\u2007|\\u202F)+"," ");
         JSONObject content = new JSONObject(response);
 
         JSONArray collectedUsers = content.getJSONArray("collectedUsers");
@@ -99,14 +99,16 @@ class PeerManager implements PeerAuthenticationCallback, PeerInfoCallback, Colle
     public PeerInfo getPeerInfo(Identifier id) throws NoSuchPeerException {
         String response = getRequest("askProfile/", id.getId());
         if(response.equals("{}"))
-            throw new NoSuchPeerException(id);
+            return null;
 
-        response = response.replaceAll("(\\t|\\r|\\n|\\s|\\u00A0|\\u2007|\\u202F)+"," ");
         JSONObject content = new JSONObject(response);
-
-        //TODO: replace DeliveryPolicy.Peer policy = DeliveryPolicy.Peer.values()[content.getInt("deliveryPolicy")];
-        DeliveryPolicy.Peer policy = DeliveryPolicy.Peer.AT_LEAST_ONE;
         List<PeerChannelAddress> addresses = parseDeliveryAddress(id, content.getJSONArray("deliveryAddress"));
+        DeliveryPolicy.Peer policy;
+        try {
+            policy = DeliveryPolicy.Peer.values()[content.getInt("deliveryPolicy")];
+        } catch (Exception e) {
+            policy = DeliveryPolicy.Peer.AT_LEAST_ONE;
+        }
 
         PeerInfo info = new PeerInfo();
         info.setId(id);

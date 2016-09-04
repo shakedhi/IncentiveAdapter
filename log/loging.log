@@ -143,3 +143,105 @@
 }'.
 2016-08-30 18:38:54 INFO  IncentiveAdapter:133 - Reminder received: ' { "incentive_type": "reminder", "incentive_text": "{\"task_id\": \"969cef30-c352-11e5-8e1c-0242ac120002\"}", "incentive_timestamp": "1456392624000", "location": { "city_name": "Hadera", "country_name": "Israel" }, "recipient": { "type": "collective", "id": "6802" } }'.
 2016-08-30 18:38:54 INFO  IncentiveAdapter:148 - Sent to IS: '{ "project":"SmartSociety", "user_id":"6802", "geo":"{ "city_name:"Hadera", "country_name:"Israel" }", "subject":"{"task_id": "969cef30-c352-11e5-8e1c-0242ac120002"}", "created_at":"2016-02-25T09:30:24Z" }'.
+2016-09-04 12:36:38 INFO  IncentiveAdapter:65 - Pusher client is CONNECTED
+2016-09-04 12:37:50 INFO  IncentiveAdapter:65 - Pusher client is CONNECTED
+2016-09-04 12:53:59 INFO  IncentiveAdapter:75 - Received intervention request (data: {"project": "SmartSociety", "intervention_text": "{\"task_id\": \"969cef30-c352-11e5-8e1c-0242ac120002\"}", "collective_id": "6802", "invalidated": [], "intervention_type": "reminder"})
+2016-09-04 12:54:00 INFO  PeerManager:62 - {  "collectedUsers": [    "JhonnyD",    "Niceguy2",    "AlbertW"  ]}
+2016-09-04 12:54:01 INFO  IncentiveAdapter:140 - Reminder was sent to the peers of collective 6802 that didn't respond.
+2016-09-04 12:54:01 INFO  PeerManager:62 - {  "username": "shakedhi",  "available": true,  "deliveryPolicy": 0,  "deliveryAddress": [    {      "channelType": "Email",      "contactParams": [        "shakedhi@post.bgu.ac.il"      ]    }  ]}
+2016-09-04 12:57:01 INFO  IncentiveAdapter:75 - Received intervention request (data: {"project": "SmartSociety", "intervention_text": "{\"task_id\": \"969cef30-c352-11e5-8e1c-0242ac120002\"}", "collective_id": "6802", "invalidated": [], "intervention_type": "reminder"})
+2016-09-04 12:57:01 INFO  PeerManager:62 - {  "collectedUsers": [    "JhonnyD",    "Niceguy2",    "AlbertW"  ]}
+2016-09-04 12:57:01 INFO  IncentiveAdapter:140 - Reminder was sent to the peers of collective 6802 that didn't respond.
+2016-09-04 12:59:01 INFO  IncentiveAdapter:75 - Received intervention request (data: {"project": "SmartSociety", "intervention_text": "{\"task_id\": \"969cef30-c352-11e5-8e1c-0242ac120002\"}", "collective_id": "6802", "invalidated": [["JhonnyD"], ["Niceguy2"]], "intervention_type": "reminder"})
+2016-09-04 12:59:01 INFO  PeerManager:62 - {  "collectedUsers": [    "JhonnyD",    "Niceguy2",    "AlbertW"  ]}
+2016-09-04 13:03:05 INFO  IncentiveAdapter:75 - Received intervention request (data: {"project": "SmartSociety", "intervention_text": "{\"task_id\": \"969cef30-c352-11e5-8e1c-0242ac120002\"}", "collective_id": "6802", "invalidated": [["JhonnyD"], ["Niceguy2"]], "intervention_type": "reminder"})
+2016-09-04 13:03:07 INFO  PeerManager:62 - {  "collectedUsers": [    "JhonnyD",    "Niceguy2",    "AlbertW"  ]}
+2016-09-04 13:04:42 INFO  IncentiveAdapter:75 - Received intervention request (data: {"project": "SmartSociety", "intervention_text": "{\"task_id\": \"969cef30-c352-11e5-8e1c-0242ac120002\"}", "collective_id": "6802", "invalidated": ["JhonnyD", "Niceguy2"], "intervention_type": "reminder"})
+2016-09-04 13:04:42 INFO  PeerManager:62 - {  "collectedUsers": [    "JhonnyD",    "Niceguy2",    "AlbertW"  ]}
+2016-09-04 13:04:42 INFO  IncentiveAdapter:140 - Reminder was sent to the peers of collective 6802 that didn't respond.
+2016-09-04 13:04:42 INFO  PeerManager:62 - {  "username": "shakedhi",  "available": true,  "deliveryPolicy": 0,  "deliveryAddress": [    {      "channelType": "Email",      "contactParams": [        "shakedhi@post.bgu.ac.il"      ]    }  ]}
+2016-09-04 13:09:10 INFO  IncentiveAdapter:65 - Pusher client is CONNECTED
+2016-09-04 13:12:00 INFO  IncentiveAdapter:75 - Received intervention request (data: {"project": "SmartSociety", "intervention_text": "{\"task_id\": \"969cef30-c352-11e5-8e1c-0242ac120002\"}", "collective_id": "6802", "invalidated": ["Niceguy2"], "intervention_type": "reminder"})
+2016-09-04 13:12:03 INFO  PeerManager:62 - {  "collectedUsers": [    "JhonnyD",    "Niceguy2",    "AlbertW"  ]}
+2016-09-04 13:12:03 INFO  IncentiveAdapter:117 - Peer Niceguy2 was invalidated from collective 6802
+2016-09-04 13:12:03 INFO  IncentiveAdapter:144 - Reminder was sent to the peers of collective 6802 that didn't respond.
+2016-09-04 13:12:04 INFO  PeerManager:62 - {  "username": "shakedhi",  "available": true,  "deliveryPolicy": 0,  "deliveryAddress": [    {      "channelType": "Email",      "contactParams": [        "shakedhi@post.bgu.ac.il"      ]    }  ]}
+2016-09-04 13:26:33 INFO  IncentiveAdapter:66 - Pusher client is CONNECTED
+2016-09-04 13:30:00 INFO  IncentiveAdapter:76 - Received intervention request (data: {"project": "SmartSociety", "intervention_text": "{\"task_id\": \"969cef30-c352-11e5-8e1c-0242ac120002\"}", "collective_id": "6802", "invalidated": ["JhonnyD", "Niceguy2"], "intervention_type": "reminder"})
+2016-09-04 13:30:01 INFO  PeerManager:63 - { "collectedUsers": [ "JhonnyD", "Niceguy2", "AlbertW" ]}
+2016-09-04 13:30:01 INFO  IncentiveAdapter:109 - Peer JhonnyD was invalidated from collective 6802
+2016-09-04 13:30:01 INFO  IncentiveAdapter:109 - Peer Niceguy2 was invalidated from collective 6802
+2016-09-04 13:30:02 INFO  IncentiveAdapter:135 - Reminder was sent to the peers of collective 6802 that didn't respond.
+2016-09-04 13:30:02 INFO  PeerManager:63 - {}
+2016-09-04 13:30:02 ERROR PeerInfoService:120 - Error while retrieving peerinfo for peer Identifier{type=PEER, id='AlbertW', postfix=''}
+java.util.concurrent.ExecutionException: at.ac.tuwien.dsg.smartcom.callback.exception.NoSuchPeerException
+	at com.google.common.util.concurrent.AbstractFuture$Sync.getValue(AbstractFuture.java:299)
+	at com.google.common.util.concurrent.AbstractFuture$Sync.get(AbstractFuture.java:286)
+	at com.google.common.util.concurrent.AbstractFuture.get(AbstractFuture.java:116)
+	at com.google.common.util.concurrent.Uninterruptibles.getUninterruptibly(Uninterruptibles.java:135)
+	at com.google.common.cache.LocalCache$Segment.getAndRecordStats(LocalCache.java:2346)
+	at com.google.common.cache.LocalCache$Segment.loadSync(LocalCache.java:2318)
+	at com.google.common.cache.LocalCache$Segment.lockedGetOrLoad(LocalCache.java:2280)
+	at com.google.common.cache.LocalCache$Segment.get(LocalCache.java:2195)
+	at com.google.common.cache.LocalCache.get(LocalCache.java:3934)
+	at com.google.common.cache.LocalCache.getOrLoad(LocalCache.java:3938)
+	at com.google.common.cache.LocalCache$LocalLoadingCache.get(LocalCache.java:4821)
+	at at.ac.tuwien.dsg.smartcom.manager.messaging.PeerInfoServiceImpl.getPeerInfo(PeerInfoServiceImpl.java:115)
+	at at.ac.tuwien.dsg.smartcom.manager.messaging.MessagingAndRoutingManagerImpl.deliverToPeer(MessagingAndRoutingManagerImpl.java:346)
+	at at.ac.tuwien.dsg.smartcom.manager.messaging.MessagingAndRoutingManagerImpl.handleMessage(MessagingAndRoutingManagerImpl.java:300)
+	at at.ac.tuwien.dsg.smartcom.manager.messaging.MessagingAndRoutingManagerImpl$2.run(MessagingAndRoutingManagerImpl.java:218)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: at.ac.tuwien.dsg.smartcom.callback.exception.NoSuchPeerException
+	at adapter.PeerManager.getPeerInfo(PeerManager.java:102)
+	at at.ac.tuwien.dsg.smartcom.manager.messaging.PeerInfoServiceImpl$1.load(PeerInfoServiceImpl.java:73)
+	at at.ac.tuwien.dsg.smartcom.manager.messaging.PeerInfoServiceImpl$1.load(PeerInfoServiceImpl.java:68)
+	at com.google.common.cache.LocalCache$LoadingValueReference.loadFuture(LocalCache.java:3524)
+	at com.google.common.cache.LocalCache$Segment.loadSync(LocalCache.java:2317)
+	... 14 more
+2016-09-04 13:52:57 INFO  IncentiveAdapter:68 - Pusher client is CONNECTED
+2016-09-04 13:54:00 INFO  IncentiveAdapter:78 - Received intervention request (data: {"project": "SmartSociety", "intervention_text": "{\"task_id\": \"969cef30-c352-11e5-8e1c-0242ac120002\"}", "collective_id": "6802", "invalidated": ["JhonnyD", "Niceguy2"], "intervention_type": "reminder"})
+2016-09-04 13:54:02 INFO  PeerManager:63 - { "collectedUsers": [ "JhonnyD", "Niceguy2", "AlbertW" ]}
+2016-09-04 13:54:02 INFO  IncentiveAdapter:111 - Peer JhonnyD was invalidated from collective 6802
+2016-09-04 13:54:02 INFO  IncentiveAdapter:111 - Peer Niceguy2 was invalidated from collective 6802
+2016-09-04 13:54:02 INFO  IncentiveAdapter:137 - Reminder was sent to the peers of collective 6802 that didn't respond.
+2016-09-04 13:54:03 INFO  PeerManager:63 - {}
+2016-09-04 13:54:03 ERROR PeerInfoService:120 - Error while retrieving peerinfo for peer Identifier{type=PEER, id='AlbertW', postfix=''}
+java.util.concurrent.ExecutionException: at.ac.tuwien.dsg.smartcom.callback.exception.NoSuchPeerException
+	at com.google.common.util.concurrent.AbstractFuture$Sync.getValue(AbstractFuture.java:299)
+	at com.google.common.util.concurrent.AbstractFuture$Sync.get(AbstractFuture.java:286)
+	at com.google.common.util.concurrent.AbstractFuture.get(AbstractFuture.java:116)
+	at com.google.common.util.concurrent.Uninterruptibles.getUninterruptibly(Uninterruptibles.java:135)
+	at com.google.common.cache.LocalCache$Segment.getAndRecordStats(LocalCache.java:2346)
+	at com.google.common.cache.LocalCache$Segment.loadSync(LocalCache.java:2318)
+	at com.google.common.cache.LocalCache$Segment.lockedGetOrLoad(LocalCache.java:2280)
+	at com.google.common.cache.LocalCache$Segment.get(LocalCache.java:2195)
+	at com.google.common.cache.LocalCache.get(LocalCache.java:3934)
+	at com.google.common.cache.LocalCache.getOrLoad(LocalCache.java:3938)
+	at com.google.common.cache.LocalCache$LocalLoadingCache.get(LocalCache.java:4821)
+	at at.ac.tuwien.dsg.smartcom.manager.messaging.PeerInfoServiceImpl.getPeerInfo(PeerInfoServiceImpl.java:115)
+	at at.ac.tuwien.dsg.smartcom.manager.messaging.MessagingAndRoutingManagerImpl.deliverToPeer(MessagingAndRoutingManagerImpl.java:346)
+	at at.ac.tuwien.dsg.smartcom.manager.messaging.MessagingAndRoutingManagerImpl.handleMessage(MessagingAndRoutingManagerImpl.java:300)
+	at at.ac.tuwien.dsg.smartcom.manager.messaging.MessagingAndRoutingManagerImpl$2.run(MessagingAndRoutingManagerImpl.java:218)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: at.ac.tuwien.dsg.smartcom.callback.exception.NoSuchPeerException
+	at adapter.PeerManager.getPeerInfo(PeerManager.java:102)
+	at at.ac.tuwien.dsg.smartcom.manager.messaging.PeerInfoServiceImpl$1.load(PeerInfoServiceImpl.java:73)
+	at at.ac.tuwien.dsg.smartcom.manager.messaging.PeerInfoServiceImpl$1.load(PeerInfoServiceImpl.java:68)
+	at com.google.common.cache.LocalCache$LoadingValueReference.loadFuture(LocalCache.java:3524)
+	at com.google.common.cache.LocalCache$Segment.loadSync(LocalCache.java:2317)
+	... 14 more
+2016-09-04 13:56:09 INFO  IncentiveAdapter:68 - Pusher client is CONNECTED
+2016-09-04 13:59:01 INFO  IncentiveAdapter:78 - Received intervention request (data: {"project": "SmartSociety", "intervention_text": "{\"task_id\": \"969cef30-c352-11e5-8e1c-0242ac120002\"}", "collective_id": "6802", "invalidated": ["JhonnyD", "Niceguy2"], "intervention_type": "reminder"})
+2016-09-04 13:59:02 INFO  PeerManager:63 - { "collectedUsers": [ "JhonnyD", "Niceguy2", "AlbertW" ]}
+2016-09-04 13:59:02 INFO  IncentiveAdapter:111 - Peer JhonnyD was invalidated from collective 6802
+2016-09-04 13:59:02 INFO  IncentiveAdapter:111 - Peer Niceguy2 was invalidated from collective 6802
+2016-09-04 13:59:02 INFO  IncentiveAdapter:137 - Reminder was sent to the peers of collective 6802 that didn't respond.
+2016-09-04 13:59:02 INFO  PeerManager:63 - {}

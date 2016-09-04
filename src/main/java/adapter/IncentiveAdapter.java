@@ -8,25 +8,20 @@ import at.ac.tuwien.dsg.smartcom.exception.CommunicationException;
 import at.ac.tuwien.dsg.smartcom.model.CollectiveInfo;
 import at.ac.tuwien.dsg.smartcom.model.Identifier;
 import at.ac.tuwien.dsg.smartcom.model.Message;
-import com.pusher.client.channel.Channel;
+
 import com.pusher.client.connection.ConnectionEventListener;
 import com.pusher.client.connection.ConnectionState;
 import com.pusher.client.connection.ConnectionStateChange;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
+import com.pusher.client.Pusher;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.TimeZone;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author Shaked Hindi
@@ -34,10 +29,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public class IncentiveAdapter{
     private static SmartCom smartCom;
     private static Communication communication;
-    private static com.pusher.rest.Pusher pusher;
-    private static com.pusher.client.Pusher pusherclient;
+    private static Pusher pusherclient;
     private static PeerManager peerManager;
-    private static ConcurrentHashMap<Identifier,LinkedList<Identifier>> invalidatedPeers;
     private static final Logger logger = LogManager.getLogger(IncentiveAdapter.class);
 
     public static void main(String[] args) throws CommunicationException, IOException {
@@ -62,10 +55,6 @@ public class IncentiveAdapter{
      * @throws CommunicationException
      */
     private static void init() throws CommunicationException {
-        //initialize pusher server
-        pusher = new com.pusher.rest.Pusher("231267", "bf548749c8760edbe3b6", "6545a7b9465cde9fab73");
-        pusher.setEncrypted(true);
-
         //initialize pusher client
         pusherclient = new com.pusher.client.Pusher("bf548749c8760edbe3b6");
 
@@ -83,21 +72,9 @@ public class IncentiveAdapter{
             }
         }, ConnectionState.ALL);
 
-        Channel channel = pusherclient.subscribe("adapter");
-
-        channel.bind("intervention", (chan, event, data) -> {
+        pusherclient.subscribe("adapter").bind("intervention", (chan, event, data) -> {
             logger.info("Received intervention request (data: " + data + ")");
             sendIntervention(data);
-        });
-
-        channel.bind("reminder", (chan, event, data) -> {
-            logger.info("Received reminder request (data: " + data + ")");
-            handleReminderRequest(data);
-        });
-
-        channel.bind("invalidate", (chan, event, data) -> {
-            logger.info("Received invalidate request (data: " + data + ")");
-            invalidatePeers(data);
         });
 
         //connect to PeerManager
@@ -108,73 +85,6 @@ public class IncentiveAdapter{
 
         //get communication API
         communication = smartCom.getCommunication();
-
-        //init invalidated peers map
-        invalidatedPeers = new ConcurrentHashMap<>();
-    }
-
-    /**
-     * Gets a reminder request, parses its content, creates a Classification Object
-     * and send it to the Incentive Server
-     * @param request the reminder request, represented by JSON
-     */
-    private static void handleReminderRequest(String request){
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-
-        String formattedContent = request.replaceAll("(\\t|\\r|\\n|\\s|\\u00A0|\\u2007|\\u202F)+"," ");
-        logger.info("Reminder received: '" + formattedContent + "'.");
-
-        JSONObject jContent = new JSONObject(formattedContent);
-
-        String collective = jContent.getJSONObject("recipient").getString("id");
-        String city = tryGetLocation(jContent.getJSONObject("location"), "city_name");
-        String country = tryGetLocation(jContent.getJSONObject("location"), "country_name");
-        String incentive_text = jContent.getString("incentive_text");
-        String created = sdf.format(new Date(jContent.getLong("incentive_timestamp")));
-
-        //create a list for the excluded experts
-        invalidatedPeers.put(Identifier.collective(collective), new LinkedList<>());
-
-        //send message to incentive server
-        Classification classification = new Classification(collective, city, country, incentive_text, created);
-        logger.info("Sent to IS: '" + classification.toString() + "'.");
-        System.exit(0);
-        pusher.trigger("ouroboros", "classification", classification);
-    }
-
-    private static String tryGetLocation(JSONObject location, String fieldName){
-        try{
-            return location.getString(fieldName);
-        } catch (JSONException je) {
-            return "UNKNOWN";
-        }
-    }
-
-    /**
-     * Gets an invalidate request with a collective and a list of peers and
-     * adds them to the corresponding invalidated peers list
-     * @param request the invalidate request, represented by JSON
-     */
-    private static void invalidatePeers(String request) {
-        JSONObject jRequest = new JSONObject(request);
-        String collective = jRequest.getString("collective");
-        JSONArray peers = jRequest.getJSONArray("peers");
-        Identifier collectiveId = Identifier.collective(collective);
-        List<Identifier> invalidated = invalidatedPeers.get(collectiveId);
-
-        if(invalidated == null) {
-            logger.error("null list (id: " + collectiveId.getId() + ").");
-            return;
-        }
-
-        //parse json array and add experts to collective invalidated list
-        Identifier peerId;
-        for(int i = 0; i < peers.length(); i++){
-            peerId = Identifier.peer(peers.getJSONObject(i).getString("id"));
-            invalidated.add(peerId);
-            logger.info("Peer " + peerId.getId() + " was invalidated from collective " + collective);
-        }
     }
 
     /**
@@ -191,8 +101,13 @@ public class IncentiveAdapter{
         try {
             CollectiveInfo collectiveInfo = peerManager.getCollectiveInfo(collectiveId);
             shouldBeReminded = collectiveInfo.getPeers();
-            shouldBeReminded.removeAll(invalidatedPeers.get(collectiveId));
-            invalidatedPeers.remove(collectiveId);
+            JSONArray invalidated = jsonObject.getJSONArray("invalidated");
+            Identifier peer;
+            for (int i = 0; i < invalidated.length(); i++) {
+                peer = Identifier.peer(invalidated.getString(i));
+                shouldBeReminded.remove(peer);
+                logger.info("Peer " + peer.getId() + " was invalidated from collective " + collectiveId.getId());
+            }
         } catch (NoSuchCollectiveException e) {
             logger.error("NoSuchCollectiveException (id: " + collectiveId.getId() + ").");
             return;
@@ -202,10 +117,10 @@ public class IncentiveAdapter{
         Message.MessageBuilder builder;
         String conversation = jsonObject.getString("intervention_type");
         String intervention = jsonObject.getString("intervention_text");
-        try{
+        try {
             for (Identifier id : shouldBeReminded){
                 builder = new Message.MessageBuilder()
-                                .setType("appid") //TODO: fix type field
+                                .setType("appid")
                                 .setSubtype("reminder")
                                 .setSenderId(Identifier.component("IS"))
                                 .setConversationId(conversation)
