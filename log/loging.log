@@ -245,3 +245,49 @@ Caused by: at.ac.tuwien.dsg.smartcom.callback.exception.NoSuchPeerException
 2016-09-04 13:59:02 INFO  IncentiveAdapter:111 - Peer Niceguy2 was invalidated from collective 6802
 2016-09-04 13:59:02 INFO  IncentiveAdapter:137 - Reminder was sent to the peers of collective 6802 that didn't respond.
 2016-09-04 13:59:02 INFO  PeerManager:63 - {}
+2016-09-27 22:11:19 INFO  IncentiveAdapter:66 - Pusher client is CONNECTED
+2016-09-27 22:18:18 INFO  IncentiveAdapter:76 - Received intervention request (data: {"intervention_text": "hello!", "recipient": {"type": "shakedhi", "id": "peer"}, "intervention_type": "message"})
+2016-09-27 22:18:20 ERROR PeerManager:52 - PeerManager.request: status code 500
+2016-09-27 22:18:20 INFO  PeerManager:63 - Oops! Something went wrong, please contact the developer.
+2016-09-27 22:22:03 INFO  IncentiveAdapter:76 - Received intervention request (data: {"intervention_text": "hello!", "recipient": {"type": "peer", "id": "shakedhi"}, "intervention_type": "message"})
+2016-09-27 22:22:03 INFO  PeerManager:63 - { "username": "shakedhi", "available": true, "deliveryPolicy": 0, "deliveryAddress": [ { "channelType": "Email", "contactParams": [ "shakedhi@post.bgu.ac.il" ] } ]}
+2016-09-27 22:25:23 INFO  IncentiveAdapter:76 - Received intervention request (data: {"intervention_text": "hello!", "recipient": {"type": "collective", "id": "6802"}, "intervention_type": "message"})
+2016-09-27 22:25:24 INFO  PeerManager:63 - { "collectedUsers": [ "JhonnyD", "Niceguy2", "AlbertW" ]}
+2016-09-27 22:25:24 INFO  PeerManager:63 - {}
+2016-09-27 22:27:56 INFO  IncentiveAdapter:66 - Pusher client is CONNECTED
+2016-09-27 22:29:55 INFO  IncentiveAdapter:76 - Received intervention request (data: {"intervention_text": "hello!", "recipient": {"type": "collective", "id": "6802"}, "intervention_type": "message"})
+2016-09-27 22:29:55 INFO  IncentiveAdapter:129 - Incentive was sent to the peer/collective with id: 6802
+2016-09-27 22:29:56 INFO  PeerManager:63 - { "collectedUsers": [ "JhonnyD", "Niceguy2", "AlbertW" ]}
+2016-09-27 22:29:57 INFO  PeerManager:63 - {}
+2016-09-27 22:31:12 INFO  IncentiveAdapter:76 - Received intervention request (data: {"intervention_text": "hello!", "recipient": {"type": "collective", "id": "6802"}, "intervention_type": "message"})
+2016-09-27 22:31:12 INFO  IncentiveAdapter:129 - Incentive was sent to the peer/collective with id: 6802
+2016-09-27 22:31:12 INFO  PeerManager:63 - { "collectedUsers": [ "JhonnyD", "Niceguy2", "AlbertW" ]}
+2016-09-27 22:31:12 INFO  PeerManager:63 - {}
+2016-09-27 22:40:09 INFO  IncentiveAdapter:76 - Received intervention request (data: {"intervention_text": "hello!", "recipient": {"type": "peer", "id": "shakedhi"}, "intervention_type": "message"})
+2016-09-27 22:40:09 INFO  IncentiveAdapter:129 - Incentive was sent to the peer/collective with id: shakedhi
+2016-09-27 22:40:09 INFO  IncentiveAdapter:76 - Received intervention request (data: {"intervention_text": "hello!", "recipient": {"type": "peer", "id": "shakedhi"}, "intervention_type": "message"})
+2016-09-27 22:40:09 INFO  IncentiveAdapter:129 - Incentive was sent to the peer/collective with id: shakedhi
+2016-09-27 22:40:09 INFO  PeerManager:63 - { "username": "shakedhi", "available": true, "deliveryPolicy": 0, "deliveryAddress": [ { "channelType": "Email", "contactParams": [ "shakedhi@post.bgu.ac.il" ] } ]}
+2016-09-27 22:40:12 INFO  IncentiveAdapter:76 - Received intervention request (data: {"intervention_text": "hello!", "recipient": {"type": "peer", "id": "shakedhi"}, "intervention_type": "message"})
+2016-09-27 22:40:12 INFO  IncentiveAdapter:129 - Incentive was sent to the peer/collective with id: shakedhi
+2016-09-27 22:44:32 INFO  IncentiveAdapter:76 - Received intervention request (data: {"intervention_text": "hello!", "recipient": {"type": "peer", "id": "shakedhi"}, "intervention_type": "message"})
+2016-09-27 22:44:32 INFO  IncentiveAdapter:129 - Incentive was sent to the peer/collective with id: shakedhi
+2016-09-27 22:44:32 INFO  IncentiveAdapter:76 - Received intervention request (data: {"intervention_text": "hello!", "recipient": {"type": "peer", "id": "shakedhi"}, "intervention_type": "message"})
+2016-09-27 22:44:32 INFO  IncentiveAdapter:129 - Incentive was sent to the peer/collective with id: shakedhi
+2016-09-27 22:45:11 INFO  IncentiveAdapter:76 - Received intervention request (data: {"intervention_text": "hello!", "recipient": {"type": "peer", "id": "shakedhi"}, "intervention_type": "message"})
+2016-09-27 22:45:11 INFO  IncentiveAdapter:129 - Incentive was sent to the peer/collective with id: shakedhi
+2016-09-27 22:54:12 INFO  IncentiveAdapter:76 - Received intervention request (data: {"intervention_text": "hello!", "recipient": {"type": "peer", "id": "shakedhi"}, "intervention_type": "message"})
+2016-09-27 22:54:12 INFO  IncentiveAdapter:129 - Incentive was sent to the peer/collective with id: shakedhi
+2016-09-27 22:54:12 INFO  PeerManager:63 - { "username": "shakedhi", "available": true, "deliveryPolicy": 0, "deliveryAddress": [ { "channelType": "Email", "contactParams": [ "shakedhi@post.bgu.ac.il" ] } ]}
+2016-09-27 22:57:32 INFO  IncentiveAdapter:76 - Received intervention request (data: {"intervention_text": "hello!", "recipient": {"type": "peer", "id": "shakedhi"}, "intervention_type": "message"})
+2016-09-27 22:57:32 INFO  IncentiveAdapter:129 - Incentive was sent to the peer/collective with id: shakedhi
+2016-09-27 22:57:53 INFO  IncentiveAdapter:76 - Received intervention request (data: {"intervention_text": "hello!", "recipient": {"type": "peer", "id": "shakedhi"}, "intervention_type": "message"})
+2016-09-27 22:57:53 INFO  IncentiveAdapter:129 - Incentive was sent to the peer/collective with id: shakedhi
+2016-09-27 22:58:33 INFO  IncentiveAdapter:76 - Received intervention request (data: {"intervention_text": "hello!", "recipient": {"type": "peer", "id": "shakedhi"}, "intervention_type": "message"})
+2016-09-27 22:58:33 INFO  IncentiveAdapter:129 - Incentive was sent to the peer/collective with id: shakedhi
+2016-09-27 23:00:30 INFO  IncentiveAdapter:66 - Pusher client is CONNECTED
+2016-09-27 23:03:20 INFO  IncentiveAdapter:76 - Received intervention request (data: {"intervention_text": "hi man!", "recipient": {"type": "peer", "id": "shakedhi"}, "intervention_type": "message"})
+2016-09-27 23:03:20 INFO  IncentiveAdapter:129 - Incentive was sent to the peer/collective with id: shakedhi
+2016-09-27 23:03:21 INFO  PeerManager:63 - { "username": "shakedhi", "available": true, "deliveryPolicy": 0, "deliveryAddress": [ { "channelType": "Email", "contactParams": [ "shakedhi@post.bgu.ac.il" ] } ]}
+2016-09-27 23:07:17 INFO  IncentiveAdapter:76 - Received intervention request (data: {"intervention_text": "some preconfigured message", "recipient": {"type": "peer", "id": "shakedhi"}, "intervention_type": "message"})
+2016-09-27 23:07:17 INFO  IncentiveAdapter:129 - Incentive was sent to the peer/collective with id: shakedhi

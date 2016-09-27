@@ -85,7 +85,7 @@ class PeerManager implements PeerAuthenticationCallback, PeerInfoCallback, Colle
         CollectiveInfo info = new CollectiveInfo();
         info.setId(collective);
         info.setPeers(peers);
-        info.setDeliveryPolicy(DeliveryPolicy.Collective.TO_ANY);
+        info.setDeliveryPolicy(DeliveryPolicy.Collective.TO_ALL_MEMBERS);
 
         return info;
     }
